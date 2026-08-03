@@ -1,55 +1,60 @@
 # HelpDesk API
 
-## Description
+Backend REST développé avec **Django** et **Django REST Framework** permettant de gérer un système de support informatique inspiré de GLPI.
 
-HelpDesk API est une application Backend développée avec Django et Django REST Framework. Elle permet de gérer un système de support technique en offrant des fonctionnalités telles que la gestion des utilisateurs, des tickets, des commentaires, des pièces jointes et des notifications.
-
-Ce projet est réalisé dans un objectif d'apprentissage afin de reproduire les bonnes pratiques utilisées dans les équipes Backend professionnelles.
+Le projet est réalisé dans un objectif d'apprentissage afin d'appliquer les bonnes pratiques utilisées dans les équipes Backend professionnelles.
 
 ---
 
-## État actuel du projet
-
-À ce stade, le projet permet de :
-
-* Exécuter Django dans des conteneurs Docker.
-* Utiliser PostgreSQL comme base de données.
-* Gérer la configuration avec des variables d'environnement.
-* Appliquer les migrations Django.
-* Disposer d'une base de projet professionnelle pour développer l'API HelpDesk.
-
----
-
-## Objectifs
+# Objectifs
 
 Ce projet a pour objectifs de :
 
-* Comprendre l'architecture d'une application Django professionnelle.
-* Maîtriser Django et Django REST Framework.
-* Concevoir et développer une API REST robuste et maintenable.
-* Appliquer les bonnes pratiques de développement Backend.
-* Utiliser PostgreSQL comme base de données relationnelle.
-* Conteneuriser l'application avec Docker.
-* Mettre en place des tests automatisés.
-* Intégrer des outils de qualité de code.
-* Construire une pipeline CI/CD.
-* Déployer une application Django dans un environnement de production.
-* Comprendre l'intégration avec GLPI.
-* Découvrir Kubernetes du point de vue d'un développeur Backend.
+- Comprendre l'architecture d'une application Django professionnelle.
+- Maîtriser Django et Django REST Framework.
+- Concevoir une API REST robuste et maintenable.
+- Utiliser PostgreSQL comme base de données relationnelle.
+- Conteneuriser l'application avec Docker.
+- Mettre en place des tests automatisés.
+- Intégrer des outils de qualité de code.
+- Construire une pipeline CI/CD.
+- Déployer l'application.
+- Intégrer l'API GLPI.
+- Découvrir Kubernetes du point de vue d'un développeur Backend.
 
 ---
 
-## Architecture actuelle
+# État actuel du projet
+
+Fonctionnalités actuellement implémentées :
+
+- ✅ Conteneurisation avec Docker
+- ✅ Base de données PostgreSQL
+- ✅ Configuration avec les variables d'environnement
+- ✅ Architecture Django professionnelle
+- ✅ Modèle utilisateur personnalisé (`Custom User Model`)
+- ✅ Interface d'administration Django
+- ✅ Gestion des migrations
+
+---
+
+# Architecture
 
 ```text
 helpdesk-api/
+│
 ├── docker/
 │   └── Dockerfile
+│
 ├── requirements/
 │   └── development.txt
+│
 ├── src/
+│   ├── apps/
+│   │   └── users/
 │   ├── config/
 │   └── manage.py
+│
 ├── compose.yaml
 ├── .env.example
 ├── .gitignore
@@ -58,102 +63,135 @@ helpdesk-api/
 
 ---
 
-## Stack technique
+# Stack technique
 
-### Backend
+## Backend
 
-* Python 3.13
-* Django 5.2
-* Django REST Framework 3.16
+- Python 3.13
+- Django 5.2
+- Django REST Framework 3.16
 
-### Base de données
+## Base de données
 
-* PostgreSQL 17
+- PostgreSQL 17
 
-### Conteneurisation
+## Conteneurisation
 
-* Docker
-* Docker Compose
+- Docker
+- Docker Compose
 
-### Gestion de configuration
+## Configuration
 
-* django-environ 0.12
+- django-environ
 
-### Versionnement
+## Versionnement
 
-* Git
-* GitHub
+- Git
+- GitHub
 
-### Outils prévus
+## Outils prévus
 
-* Black
-* isort
-* Flake8
-* Bandit
-* pre-commit
-* Pytest
-* GitHub Actions
-* Gunicorn
-* Nginx
-* Kubernetes
-
----
-
-## Prérequis
-
-Avant de lancer le projet, assurez-vous d'avoir installé :
-
-* Git
-* Docker Desktop
-
-Aucun environnement virtuel Python n'est nécessaire. Le projet est exécuté entièrement dans des conteneurs Docker.
+- Black
+- isort
+- Flake8
+- Bandit
+- pre-commit
+- Pytest
+- GitHub Actions
+- Gunicorn
+- Nginx
+- Kubernetes
 
 ---
 
-## Installation
+# Prérequis
 
-### 1. Cloner le dépôt
+Avant de lancer le projet, installez :
+
+- Git
+- Docker Desktop
+
+Aucun environnement virtuel Python n'est nécessaire.
+
+Toute l'application s'exécute dans Docker.
+
+---
+
+# Installation
+
+## 1. Cloner le dépôt
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/esprit-24/helpdesk-api.git
+```
+
+```bash
 cd helpdesk-api
 ```
 
-### 2. Créer le fichier `.env`
+---
 
-Copiez le fichier `.env.example` et renommez-le en `.env`.
+## 2. Créer le fichier `.env`
 
-Renseignez ensuite les variables nécessaires.
+Copier :
 
-### 3. Construire les conteneurs
+```text
+.env.example
+```
+
+vers
+
+```text
+.env
+```
+
+Puis modifier les valeurs.
+
+---
+
+## 3. Construire les conteneurs
 
 ```bash
 docker compose up --build -d
 ```
 
-### 4. Appliquer les migrations
+---
+
+## 4. Appliquer les migrations
 
 ```bash
 docker compose exec web python manage.py migrate
 ```
 
-### 5. Accéder à l'application
+---
 
-L'application est disponible à l'adresse :
+## 5. Créer un superutilisateur
 
-```text
-http://localhost:8000
+```bash
+docker compose exec web python manage.py createsuperuser
 ```
 
 ---
 
-## Variables d'environnement
+## 6. Accéder à l'application
 
-Le projet utilise des variables d'environnement pour sa configuration.
+API :
+
+```text
+http://localhost:8000/
+```
+
+Administration :
+
+```text
+http://localhost:8000/admin/
+```
+
+---
+
+# Variables d'environnement
 
 Le fichier `.env.example` sert de modèle.
-
-Les variables actuellement utilisées sont :
 
 ```env
 POSTGRES_DB=helpdesk_db
@@ -167,15 +205,27 @@ DJANGO_DEBUG=True
 DJANGO_SECRET_KEY=change_me
 ```
 
-> **Important**
->
-> * Le fichier `.env` ne doit jamais être versionné.
-> * En développement, remplacez `change_me` par vos propres valeurs.
-> * En production, générez une nouvelle `DJANGO_SECRET_KEY`.
+## Générer une SECRET_KEY
+
+Dans un terminal :
+
+```bash
+docker compose exec web python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+
+Remplacer ensuite :
+
+```text
+DJANGO_SECRET_KEY=change_me
+```
+
+par la clé générée.
+
+> Le fichier `.env` ne doit jamais être versionné.
 
 ---
 
-## Commandes utiles
+# Commandes utiles
 
 Construire les conteneurs :
 
@@ -187,6 +237,12 @@ Arrêter les conteneurs :
 
 ```bash
 docker compose down
+```
+
+Arrêter les conteneurs et supprimer les données PostgreSQL :
+
+```bash
+docker compose down -v
 ```
 
 Afficher les conteneurs :
@@ -201,10 +257,10 @@ Afficher les logs :
 docker compose logs web
 ```
 
-Exécuter une commande Django :
+Créer une migration :
 
 ```bash
-docker compose exec web python manage.py <commande>
+docker compose exec web python manage.py makemigrations
 ```
 
 Appliquer les migrations :
@@ -213,26 +269,69 @@ Appliquer les migrations :
 docker compose exec web python manage.py migrate
 ```
 
----
+Créer un superutilisateur :
 
-## Roadmap
+```bash
+docker compose exec web python manage.py createsuperuser
+```
 
-* [x] Initialisation du projet
-* [x] Configuration Docker
-* [x] Configuration PostgreSQL
-* [x] Variables d'environnement
-* [x] Première migration Django
-* [ ] Création de l'application `tickets`
-* [ ] Authentification
-* [ ] API REST
-* [ ] Tests
-* [ ] Documentation OpenAPI
-* [ ] CI/CD
-* [ ] Déploiement
-* [ ] Kubernetes
+Exécuter une commande Django depuis le conteneur :
+
+```bash
+docker compose exec web python manage.py <commande>
+```
 
 ---
 
-## Licence
+# Roadmap
+
+## Infrastructure
+
+- [x] Initialisation du projet
+- [x] Docker
+- [x] PostgreSQL
+- [x] Variables d'environnement
+
+## Authentification
+
+- [x] Application `users`
+- [x] Modèle utilisateur personnalisé
+- [x] Django Admin
+
+## Domaine métier
+
+- [ ] Tickets
+- [ ] Catégories
+- [ ] Priorités
+- [ ] Statuts
+- [ ] Affectations
+- [ ] Commentaires
+- [ ] Pièces jointes
+
+## API
+
+- [ ] Django REST Framework
+- [ ] Authentification JWT
+- [ ] Documentation OpenAPI
+
+## Qualité
+
+- [ ] Tests
+- [ ] Black
+- [ ] isort
+- [ ] Flake8
+- [ ] Bandit
+- [ ] pre-commit
+
+## DevOps
+
+- [ ] GitHub Actions
+- [ ] Déploiement
+- [ ] Intégration GLPI
+- [ ] Kubernetes
+
+---
+
+# Licence
 
 Projet réalisé dans un objectif d'apprentissage.
