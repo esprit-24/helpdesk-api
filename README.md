@@ -2,7 +2,7 @@
 
 Backend REST développé avec **Django** et **Django REST Framework** permettant de gérer un système de support informatique inspiré de GLPI.
 
-Le projet est réalisé dans un objectif d'apprentissage afin d'appliquer les bonnes pratiques utilisées dans les équipes Backend professionnelles.
+Ce projet est réalisé dans un objectif d'apprentissage afin d'appliquer les bonnes pratiques utilisées dans les équipes Backend professionnelles.
 
 ---
 
@@ -33,6 +33,12 @@ Fonctionnalités actuellement implémentées :
 - ✅ Configuration avec les variables d'environnement
 - ✅ Architecture Django professionnelle
 - ✅ Modèle utilisateur personnalisé (`Custom User Model`)
+- ✅ Domaine métier des tickets
+  - Gestion des statuts
+  - Gestion des priorités
+  - Gestion des catégories
+  - Gestion des tickets
+  - Gestion des affectations
 - ✅ Interface d'administration Django
 - ✅ Gestion des migrations
 
@@ -51,7 +57,8 @@ helpdesk-api/
 │
 ├── src/
 │   ├── apps/
-│   │   └── users/
+│   │   ├── users/
+│   │   └── tickets/
 │   ├── config/
 │   └── manage.py
 │
@@ -207,8 +214,6 @@ DJANGO_SECRET_KEY=change_me
 
 ## Générer une SECRET_KEY
 
-Dans un terminal :
-
 ```bash
 docker compose exec web python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
@@ -257,6 +262,12 @@ Afficher les logs :
 docker compose logs web
 ```
 
+Vérifier la configuration Django :
+
+```bash
+docker compose exec web python manage.py check
+```
+
 Créer une migration :
 
 ```bash
@@ -275,7 +286,7 @@ Créer un superutilisateur :
 docker compose exec web python manage.py createsuperuser
 ```
 
-Exécuter une commande Django depuis le conteneur :
+Exécuter une commande Django :
 
 ```bash
 docker compose exec web python manage.py <commande>
@@ -300,13 +311,14 @@ docker compose exec web python manage.py <commande>
 
 ## Domaine métier
 
-- [ ] Tickets
-- [ ] Catégories
-- [ ] Priorités
-- [ ] Statuts
-- [ ] Affectations
+- [x] Tickets
+- [x] Catégories
+- [x] Priorités
+- [x] Statuts
+- [x] Affectations
 - [ ] Commentaires
 - [ ] Pièces jointes
+- [ ] Notifications
 
 ## API
 
@@ -329,6 +341,29 @@ docker compose exec web python manage.py <commande>
 - [ ] Déploiement
 - [ ] Intégration GLPI
 - [ ] Kubernetes
+
+---
+
+# Historique des sprints
+
+## Sprint 1
+
+- Initialisation du projet
+- Docker
+- PostgreSQL
+- Configuration avec les variables d'environnement
+- Modèle utilisateur personnalisé
+- Django Admin
+
+## Sprint 2
+
+- Application `tickets`
+- Gestion des statuts
+- Gestion des priorités
+- Gestion des catégories
+- Modèle `Ticket`
+- Modèle `Assignment`
+- Administration des tickets et des affectations
 
 ---
 
