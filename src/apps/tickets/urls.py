@@ -4,6 +4,7 @@ from apps.tickets.views import (
     StatusViewSet,
     PriorityViewSet,
     CategoryViewSet,
+    TicketViewSet,
 )
 
 
@@ -27,5 +28,10 @@ router.register(
     basename="category",
 )
 
+router.register(
+    "tickets",
+    TicketViewSet,
+    basename="ticket",
+)
 
 urlpatterns = router.urls
