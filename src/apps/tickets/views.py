@@ -4,11 +4,14 @@ from apps.tickets.models import (
     Status,
     Priority,
     Category,
+    Ticket,
 )
 from apps.tickets.serializers import (
     StatusSerializer,
     PrioritySerializer,
     CategorySerializer,
+    TicketReadSerializer,
+    TicketWriteSerializer,
 )
 
 
@@ -37,3 +40,20 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+
+class TicketViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for the Ticket model.
+    """
+
+    queryset = Ticket.objects.all()
+
+    def get_serializer_class(self):
+        if self.action in (
+            "list",
+            "retrieve",
+        ):
+            return TicketReadSerializer
+
+        return TicketWriteSerializer
