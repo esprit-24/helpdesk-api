@@ -41,6 +41,11 @@ Fonctionnalités actuellement implémentées :
   - Gestion des affectations
 - ✅ Interface d'administration Django
 - ✅ Gestion des migrations
+- ✅ API REST des modèles de référence
+  - Status
+  - Priority
+  - Category
+- ✅ Commande d'initialisation des données (`seed_data`)
 
 ---
 
@@ -59,6 +64,13 @@ helpdesk-api/
 │   ├── apps/
 │   │   ├── users/
 │   │   └── tickets/
+│   │       ├── management/
+│   │       ├── migrations/
+│   │       ├── admin.py
+│   │       ├── models.py
+│   │       ├── serializers.py
+│   │       ├── urls.py
+│   │       └── views.py
 │   ├── config/
 │   └── manage.py
 │
@@ -180,7 +192,17 @@ docker compose exec web python manage.py createsuperuser
 
 ---
 
-## 6. Accéder à l'application
+## 6. Initialiser les données de référence
+
+```bash
+docker compose exec web python manage.py seed_data
+```
+
+Cette commande crée les statuts, priorités et catégories par défaut.
+
+---
+
+## 7. Accéder à l'application
 
 API :
 
@@ -286,6 +308,12 @@ Créer un superutilisateur :
 docker compose exec web python manage.py createsuperuser
 ```
 
+Initialiser les données de référence :
+
+```bash
+docker compose exec web python manage.py seed_data
+```
+
 Exécuter une commande Django :
 
 ```bash
@@ -322,7 +350,14 @@ docker compose exec web python manage.py <commande>
 
 ## API
 
-- [ ] Django REST Framework
+## API
+
+- [x] Django REST Framework
+- [x] API REST des statuts
+- [x] API REST des priorités
+- [x] API REST des catégories
+- [ ] API REST des tickets
+- [ ] API REST des affectations
 - [ ] Authentification JWT
 - [ ] Documentation OpenAPI
 
@@ -364,6 +399,15 @@ docker compose exec web python manage.py <commande>
 - Modèle `Ticket`
 - Modèle `Assignment`
 - Administration des tickets et des affectations
+
+## Sprint 3
+
+- Configuration de Django REST Framework
+- API REST des statuts
+- API REST des priorités
+- API REST des catégories
+- Commande `seed_data`
+- API des tickets (en cours)
 
 ---
 
