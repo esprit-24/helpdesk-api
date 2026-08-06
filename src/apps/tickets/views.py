@@ -61,6 +61,15 @@ class TicketViewSet(viewsets.ModelViewSet):
 
         return TicketWriteSerializer
     
+    def perform_create(self, serializer):
+        """
+        Automatically set the requester to the authenticated user.
+        """
+
+        serializer.save(
+            requester=self.request.user,
+        )
+    
 
 class AssignmentViewSet(viewsets.ModelViewSet):
     """
@@ -77,3 +86,12 @@ class AssignmentViewSet(viewsets.ModelViewSet):
             return AssignmentReadSerializer
 
         return AssignmentWriteSerializer
+    
+    def perform_create(self, serializer):
+        """
+        Automatically set the assigner to the authenticated user.
+        """
+
+        serializer.save(
+            assigned_by=self.request.user,
+        )

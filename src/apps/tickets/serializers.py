@@ -165,10 +165,6 @@ class TicketWriteSerializer(serializers.ModelSerializer):
     Serializer for writing ticket information.
     """
 
-    requester = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(),
-    )
-
     owner = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),
         required=False,
@@ -192,7 +188,6 @@ class TicketWriteSerializer(serializers.ModelSerializer):
         fields = (
             "title",
             "description",
-            "requester",
             "owner",
             "status",
             "priority",
@@ -242,10 +237,6 @@ class AssignmentWriteSerializer(serializers.ModelSerializer):
         queryset=User.objects.all(),
     )
 
-    assigned_by = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(),
-    )
-
     ended_at = serializers.DateTimeField(
         required=False,
         allow_null=True,
@@ -256,7 +247,6 @@ class AssignmentWriteSerializer(serializers.ModelSerializer):
         fields = (
             "ticket",
             "technician",
-            "assigned_by",
             "ended_at",
             "is_primary",
         )
