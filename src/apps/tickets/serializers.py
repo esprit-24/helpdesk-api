@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from apps.tickets.models import (
+    Assignment,
     Category,
     Priority,
     Status,
@@ -13,6 +14,7 @@ from apps.users.serializers import UserSummarySerializer
 ####################################################
 # Status serializers
 ####################################################
+
 
 class StatusSummarySerializer(serializers.ModelSerializer):
     """
@@ -47,6 +49,7 @@ class StatusSerializer(serializers.ModelSerializer):
 # Priority serializers
 ####################################################
 
+
 class PrioritySummarySerializer(serializers.ModelSerializer):
     """
     Serializer for displaying basic priority information.
@@ -79,6 +82,7 @@ class PrioritySerializer(serializers.ModelSerializer):
 # Category serializers
 ####################################################
 
+
 class CategorySummarySerializer(serializers.ModelSerializer):
     """
     Serializer for displaying basic category information.
@@ -109,6 +113,23 @@ class CategorySerializer(serializers.ModelSerializer):
 ####################################################
 # Ticket serializers
 ####################################################
+
+
+class TicketSummarySerializer(serializers.ModelSerializer):
+    """
+    Serializer for displaying basic ticket information.
+    """
+
+    requester = UserSummarySerializer(read_only=True)
+
+    class Meta:
+        model = Ticket
+        fields = (
+            "id",
+            "title",
+            "requester",
+        )
+
 
 class TicketReadSerializer(serializers.ModelSerializer):
     """
@@ -176,4 +197,66 @@ class TicketWriteSerializer(serializers.ModelSerializer):
             "status",
             "priority",
             "category",
+        )
+
+
+####################################################
+# Assignment serializers
+####################################################
+
+
+class AssignmentReadSerializer(serializers.ModelSerializer):
+    """
+    Serializer for reading assignment information.
+    """
+
+    ticket = TicketSummarySerializer(read_only=True)
+
+    technician = UserSummarySerializer(read_only=True)
+
+    assigned_by = UserSummarySerializer(read_only=True)
+
+    class Meta:
+        model = Assignment
+        fields = (
+            "id",
+            "ticket",
+            "technician",
+            "assigned_by",
+            "assigned_at",
+            "ended_at",
+            "is_primary",
+        )
+
+
+class AssignmentWriteSerializer(serializers.ModelSerializer):
+    """
+    Serializer for writing assignment information.
+    """
+
+    ticket = serializers.PrimaryKeyRelatedField(
+        queryset=Ticket.objects.all(),
+    )
+
+    technician = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+    )
+
+    assigned_by = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+    )
+
+    ended_at = serializers.DateTimeField(
+        required=False,
+        allow_null=True,
+    )
+
+    class Meta:
+        model = Assignment
+        fields = (
+            "ticket",
+            "technician",
+            "assigned_by",
+            "ended_at",
+            "is_primary",
         )

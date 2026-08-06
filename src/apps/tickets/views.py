@@ -1,15 +1,18 @@
 from rest_framework import viewsets
 
 from apps.tickets.models import (
-    Status,
-    Priority,
+    Assignment,
     Category,
+    Priority,
+    Status,
     Ticket,
 )
 from apps.tickets.serializers import (
-    StatusSerializer,
-    PrioritySerializer,
+    AssignmentReadSerializer,
+    AssignmentWriteSerializer,
     CategorySerializer,
+    PrioritySerializer,
+    StatusSerializer,
     TicketReadSerializer,
     TicketWriteSerializer,
 )
@@ -57,3 +60,20 @@ class TicketViewSet(viewsets.ModelViewSet):
             return TicketReadSerializer
 
         return TicketWriteSerializer
+    
+
+class AssignmentViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for the Assignment model.
+    """
+
+    queryset = Assignment.objects.all()
+
+    def get_serializer_class(self):
+        if self.action in (
+            "list",
+            "retrieve",
+        ):
+            return AssignmentReadSerializer
+
+        return AssignmentWriteSerializer

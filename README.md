@@ -69,13 +69,12 @@ Fonctionnalités actuellement implémentées :
 
 ## API REST
 
-## API REST
-
 - ✅ Django REST Framework
 - ✅ API REST des statuts
 - ✅ API REST des priorités
 - ✅ API REST des catégories
 - ✅ API REST des tickets
+- ✅ API REST des affectations
 
 ---
 
@@ -548,11 +547,11 @@ Les commits doivent être :
 - [x] ViewSet
 - [x] Endpoints
 
-### ⏳ US-305 — API des affectations
+### ✅ US-305 — API des affectations
 
-- [ ] Serializer
-- [ ] ViewSet
-- [ ] Endpoints
+- [x] Serializer
+- [x] ViewSet
+- [x] Endpoints
 
 ### ⏳ US-306 — Authentification JWT
 
@@ -627,6 +626,7 @@ Les commits doivent être :
 - US-303 — API REST des priorités et catégories
 - US-303.5 — Commande `seed_data`
 - US-304 — API REST des tickets
+- US-305 — API REST des affectations
 
 ---
 
