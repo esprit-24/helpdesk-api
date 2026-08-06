@@ -49,6 +49,8 @@ Fonctionnalités actuellement implémentées :
 ## Authentification
 
 - ✅ Modèle utilisateur personnalisé (`Custom User Model`)
+- ✅ Authentification JWT
+- ✅ Protection des endpoints avec JWT
 
 ## Domaine métier
 
@@ -75,6 +77,7 @@ Fonctionnalités actuellement implémentées :
 - ✅ API REST des catégories
 - ✅ API REST des tickets
 - ✅ API REST des affectations
+- ✅ Authentification JWT
 
 ---
 
@@ -125,6 +128,7 @@ helpdesk-api/
 - Python 3.13
 - Django 5.2
 - Django REST Framework 3.16
+- Simple JWT 5.5
 
 ## Base de données
 
@@ -236,7 +240,43 @@ docker compose exec web python manage.py createsuperuser
 
 ---
 
-## 6. Initialiser les données de référence
+## 6. Obtenir un JWT
+
+Après avoir créé un superutilisateur, obtenez un Access Token et un Refresh Token :
+
+### Endpoint
+
+```text
+POST /api/token/
+```
+
+### Corps de la requête
+
+```json
+{
+    "username": "votre_username",
+    "password": "votre_mot_de_passe"
+}
+```
+
+### Réponse
+
+```json
+{
+    "access": "...",
+    "refresh": "..."
+}
+```
+
+Le token d'accès doit être envoyé dans les requêtes protégées :
+
+```text
+Authorization: Bearer <access_token>
+```
+
+---
+
+## 7. Initialiser les données de référence
 
 ```bash
 docker compose exec web python manage.py seed_data
@@ -252,7 +292,7 @@ La commande est **idempotente** : elle peut être exécutée plusieurs fois sans
 
 ---
 
-## 7. Vérifier la configuration
+## 8. Vérifier la configuration
 
 ```bash
 docker compose exec web python manage.py check
@@ -266,7 +306,7 @@ System check identified no issues (0 silenced).
 
 ---
 
-## 8. Accéder à l'application
+## 9. Accéder à l'application
 
 API REST :
 
@@ -553,10 +593,13 @@ Les commits doivent être :
 - [x] ViewSet
 - [x] Endpoints
 
-### ⏳ US-306 — Authentification JWT
+### ✅ US-306 — Authentification JWT
 
-- [ ] JWT
-- [ ] Permissions
+- [x] Installation de Simple JWT
+- [x] Endpoints JWT
+- [x] Authentification par défaut
+- [x] Protection des endpoints
+- [x] Utilisation de request.user
 
 ### ⏳ US-307 — Documentation OpenAPI
 
