@@ -1,9 +1,10 @@
 from rest_framework.routers import DefaultRouter
 
 from apps.tickets.views import (
-    StatusViewSet,
-    PriorityViewSet,
+    AssignmentViewSet,
     CategoryViewSet,
+    PriorityViewSet,
+    StatusViewSet,
     TicketViewSet,
 )
 
@@ -33,5 +34,12 @@ router.register(
     TicketViewSet,
     basename="ticket",
 )
+
+router.register(
+    "assignments",
+    AssignmentViewSet,
+    basename="assignment",
+)
+
 
 urlpatterns = router.urls
