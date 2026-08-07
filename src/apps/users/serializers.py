@@ -15,3 +15,20 @@ class UserSummarySerializer(serializers.ModelSerializer):
             "full_name",
             "is_active",
         )
+
+
+class UserReadSerializer(serializers.ModelSerializer):
+    """
+    Serializer for reading user information.
+    """
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "username",
+            "full_name",
+            "email",
+            "role",
+            "is_active",
+        )
