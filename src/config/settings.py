@@ -146,3 +146,6 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ),
 }
+
+
+DEFAULT_USER_PASSWORD = env("DEFAULT_USER_PASSWORD")

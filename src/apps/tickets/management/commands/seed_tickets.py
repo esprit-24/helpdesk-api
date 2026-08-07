@@ -88,7 +88,10 @@ class Command(BaseCommand):
     Populate the database with reference data.
     """
 
-    help = "Populate the database with default statuses, priorities and categories."
+    help = (
+        "Populate the database with default "
+        "statuses, priorities and categories."
+    )
 
     def handle(self, *args, **options):
         self.seed_statuses()
