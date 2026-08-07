@@ -63,11 +63,13 @@ Fonctionnalités actuellement implémentées :
 ## Administration
 
 - ✅ Interface d'administration Django
+- ✅ Gestion des rôles utilisateurs
 
 ## Base de données
 
 - ✅ Gestion des migrations
-- ✅ Commande d'initialisation des données (`seed_data`)
+- ✅ Commande d'initialisation des utilisateurs (`seed_users`)
+- ✅ Commande d'initialisation des données de référence (`seed_tickets`)
 
 ## API REST
 
@@ -77,6 +79,7 @@ Fonctionnalités actuellement implémentées :
 - ✅ API REST des catégories
 - ✅ API REST des tickets
 - ✅ API REST des affectations
+- ✅ API REST des utilisateurs
 - ✅ Authentification JWT
 
 ---
@@ -95,14 +98,20 @@ helpdesk-api/
 ├── src/
 │   ├── apps/
 │   │   ├── users/
+│   │   │   ├── management/
+│   │   │   │   └── commands/
+│   │   │   │       └── seed_users.py
+│   │   │   ├── migrations/
 │   │   │   ├── admin.py
 │   │   │   ├── models.py
-│   │   │   └── serializers.py
+│   │   │   ├── serializers.py
+│   │   │   ├── urls.py
+│   │   │   └── views.py
 │   │   │
 │   │   └── tickets/
 │   │       ├── management/
 │   │       │   └── commands/
-│   │       │       └── seed_data.py
+│   │       │       └── seed_tickets.py
 │   │       ├── migrations/
 │   │       ├── admin.py
 │   │       ├── models.py
@@ -111,6 +120,9 @@ helpdesk-api/
 │   │       └── views.py
 │   │
 │   ├── config/
+│   │   ├── settings.py
+│   │   └── urls.py
+│   │
 │   └── manage.py
 │
 ├── compose.yaml
@@ -232,17 +244,44 @@ docker compose exec web python manage.py migrate
 
 ---
 
-## 5. Créer un superutilisateur
+## 5. Créer un superutilisateur (optionnel)
 
 ```bash
 docker compose exec web python manage.py createsuperuser
 ```
 
+Cette commande permet de créer un administrateur personnalisé.
+
 ---
 
-## 6. Obtenir un JWT
+## 6. Initialiser les données de développement
 
-Après avoir créé un superutilisateur, obtenez un Access Token et un Refresh Token :
+```bash
+docker compose exec web python manage.py seed_users
+
+docker compose exec web python manage.py seed_tickets
+```
+
+Ces commandes créent automatiquement :
+
+- les utilisateurs de démonstration ;
+- les statuts ;
+- les priorités ;
+- les catégories.
+
+Le mot de passe des utilisateurs créés est défini par la variable d'environnement :
+
+```text
+DEFAULT_USER_PASSWORD
+```
+
+Les commandes sont **idempotentes** : elles peuvent être exécutées plusieurs fois sans créer de doublons.
+
+---
+
+## 7. Obtenir un JWT
+
+Authentifiez-vous avec l'un des utilisateurs créés ou avec votre superutilisateur.
 
 ### Endpoint
 
@@ -273,22 +312,6 @@ Le token d'accès doit être envoyé dans les requêtes protégées :
 ```text
 Authorization: Bearer <access_token>
 ```
-
----
-
-## 7. Initialiser les données de référence
-
-```bash
-docker compose exec web python manage.py seed_data
-```
-
-Cette commande crée automatiquement :
-
-- les statuts ;
-- les priorités ;
-- les catégories.
-
-La commande est **idempotente** : elle peut être exécutée plusieurs fois sans créer de doublons.
 
 ---
 
@@ -421,7 +444,9 @@ docker compose exec web python manage.py createsuperuser
 Initialiser les données de référence :
 
 ```bash
-docker compose exec web python manage.py seed_data
+docker compose exec web python manage.py seed_users
+
+docker compose exec web python manage.py seed_tickets
 ```
 
 Exécuter une commande Django :
@@ -601,7 +626,22 @@ Les commits doivent être :
 - [x] Protection des endpoints
 - [x] Utilisation de request.user
 
-### ⏳ US-307 — Documentation OpenAPI
+### ✅ US-307 — API des utilisateurs
+
+- [x] UserReadSerializer
+- [x] UserViewSet
+- [x] Endpoints
+- [x] ReadOnlyModelViewSet
+
+### ⏳ US-308 — Gestion des rôles et permissions
+
+- [ ] Permissions personnalisées
+- [ ] Accès selon le rôle utilisateur
+- [ ] Protection des endpoints
+- [ ] Permissions sur les tickets
+- [ ] Permissions sur les affectations
+
+### ⏳ US-309 — Documentation OpenAPI
 
 - [ ] Documentation interactive
 
@@ -667,9 +707,11 @@ Les commits doivent être :
 - US-301 — Configuration de Django REST Framework
 - US-302 — API REST des statuts
 - US-303 — API REST des priorités et catégories
-- US-303.5 — Commande `seed_data`
+- US-303.5 — Initialisation des données
 - US-304 — API REST des tickets
 - US-305 — API REST des affectations
+- US-306 — Authentification JWT
+- US-307 — API REST des utilisateurs
 
 ---
 

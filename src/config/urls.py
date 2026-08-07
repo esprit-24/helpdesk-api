@@ -42,4 +42,9 @@ urlpatterns = [
         "api/",
         include("apps.tickets.urls"),
     ),
+
+    path(
+        "api/",
+        include("apps.users.urls"),
+    ),
 ]
