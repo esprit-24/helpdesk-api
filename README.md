@@ -2,9 +2,9 @@
 
 Backend REST développé avec **Django** et **Django REST Framework** permettant de gérer un système de support informatique inspiré de **GLPI**.
 
-Ce projet est réalisé dans un objectif d'apprentissage afin d'appliquer les bonnes pratiques utilisées dans les équipes Backend professionnelles.
+Ce projet est réalisé dans un objectif d'apprentissage afin d'appliquer les bonnes pratiques de développement utilisées dans les équipes Backend professionnelles.
 
-L'objectif n'est pas uniquement de développer une API fonctionnelle, mais également de reproduire un workflow de développement utilisé dans les équipes professionnelles :
+L'objectif n'est pas uniquement de développer une API fonctionnelle, mais aussi de reproduire un workflow de développement proche de celui utilisé dans les équipes professionnelles :
 
 - Architecture modulaire
 - Git Flow
@@ -12,7 +12,7 @@ L'objectif n'est pas uniquement de développer une API fonctionnelle, mais égal
 - Revues de code
 - Documentation
 - Tests
-- Intégration Continue (CI)
+- Intégration Continue (CI/CD)
 - Déploiement
 
 ---
@@ -22,13 +22,13 @@ L'objectif n'est pas uniquement de développer une API fonctionnelle, mais égal
 Ce projet a pour objectifs de :
 
 - Comprendre l'architecture d'une application Django professionnelle.
-- Maîtriser Django et Django REST Framework.
+- Maîtriser Django, Django REST Framework et les bonnes pratiques de développement Backend.
 - Concevoir une API REST robuste et maintenable.
 - Utiliser PostgreSQL comme base de données relationnelle.
-- Conteneuriser l'application avec Docker.
+- Conteneuriser l'application avec Docker et Docker Compose.
 - Mettre en place des tests automatisés.
 - Intégrer des outils de qualité de code.
-- Construire une pipeline CI/CD.
+- Construire une pipeline d'intégration et de déploiement continus (CI/CD).
 - Déployer l'application.
 - Intégrer l'API GLPI.
 - Découvrir Kubernetes du point de vue d'un développeur Backend.
@@ -64,10 +64,11 @@ Fonctionnalités actuellement implémentées :
 
 - ✅ Interface d'administration Django
 - ✅ Gestion des rôles utilisateurs
+- ✅ Contrôle d'accès basé sur les rôles (RBAC) et les règles métier
 
 ## Base de données
 
-- ✅ Gestion des migrations
+- ✅ Gestion des migrations Django
 - ✅ Commande d'initialisation des utilisateurs (`seed_users`)
 - ✅ Commande d'initialisation des données de référence (`seed_tickets`)
 
@@ -81,6 +82,8 @@ Fonctionnalités actuellement implémentées :
 - ✅ API REST des affectations
 - ✅ API REST des utilisateurs
 - ✅ Authentification JWT
+- ✅ Contrôle d'accès basé sur les rôles (RBAC) et les règles métier
+- ✅ Permissions métier sur les tickets, affectations et données de référence
 
 ---
 
@@ -104,6 +107,7 @@ helpdesk-api/
 │   │   │   ├── migrations/
 │   │   │   ├── admin.py
 │   │   │   ├── models.py
+│   │   │   ├── permissions.py
 │   │   │   ├── serializers.py
 │   │   │   ├── urls.py
 │   │   │   └── views.py
@@ -115,6 +119,7 @@ helpdesk-api/
 │   │       ├── migrations/
 │   │       ├── admin.py
 │   │       ├── models.py
+│   │       ├── permissions.py
 │   │       ├── serializers.py
 │   │       ├── urls.py
 │   │       └── views.py
@@ -130,6 +135,17 @@ helpdesk-api/
 ├── .gitignore
 └── README.md
 ```
+
+> **Remarque :**
+> Cette arborescence présente uniquement les principaux fichiers du projet afin de faciliter la lecture du README.
+
+## Organisation du projet
+
+- **docker/** : configuration de l'image Docker.
+- **requirements/** : dépendances Python du projet.
+- **src/apps/users/** : gestion des utilisateurs, des rôles et des permissions.
+- **src/apps/tickets/** : gestion des tickets, des affectations et des données de référence.
+- **src/config/** : configuration globale de Django (settings et routes principales).
 
 ---
 
@@ -154,13 +170,14 @@ helpdesk-api/
 ## Configuration
 
 - django-environ 0.12
+- Variables d'environnement (.env)
 
 ## Versionnement
 
 - Git
 - GitHub
 
-## Outils prévus
+## Outils d'industrialisation
 
 - Pytest
 - Black
@@ -177,18 +194,19 @@ helpdesk-api/
 
 # Prérequis
 
-Avant de lancer le projet, installez :
+Avant de lancer le projet, assurez-vous de disposer des outils suivants :
 
 - Git
 - Docker Desktop
 
-Aucun environnement virtuel Python n'est nécessaire.
-
-L'ensemble de l'application s'exécute dans Docker.
+> **Remarque :**
+> Aucun environnement virtuel Python n'est nécessaire. L'ensemble de l'application s'exécute dans des conteneurs Docker.
 
 ---
 
 # Installation
+
+Les commandes suivantes doivent être exécutées depuis un terminal.
 
 ## 1. Cloner le dépôt
 
@@ -218,7 +236,7 @@ vers :
 .env
 ```
 
-Puis adapter les valeurs à votre environnement.
+Puis adaptez les valeurs à votre environnement.
 
 ---
 
@@ -250,7 +268,7 @@ docker compose exec web python manage.py migrate
 docker compose exec web python manage.py createsuperuser
 ```
 
-Cette commande permet de créer un administrateur personnalisé.
+Cette commande permet de créer un superutilisateur Django.
 
 ---
 
@@ -262,7 +280,7 @@ docker compose exec web python manage.py seed_users
 docker compose exec web python manage.py seed_tickets
 ```
 
-Ces commandes créent automatiquement :
+Ces commandes initialisent les données de développement en créant automatiquement :
 
 - les utilisateurs de démonstration ;
 - les statuts ;
@@ -281,7 +299,7 @@ Les commandes sont **idempotentes** : elles peuvent être exécutées plusieurs 
 
 ## 7. Obtenir un JWT
 
-Authentifiez-vous avec l'un des utilisateurs créés ou avec votre superutilisateur.
+Authentifiez-vous avec l'un des utilisateurs créés par `seed_users` ou avec votre superutilisateur.
 
 ### Endpoint
 
@@ -331,13 +349,13 @@ System check identified no issues (0 silenced).
 
 ## 9. Accéder à l'application
 
-API REST :
+API REST
 
 ```text
 http://localhost:8000/
 ```
 
-Administration Django :
+Administration Django
 
 ```text
 http://localhost:8000/admin/
@@ -347,7 +365,7 @@ http://localhost:8000/admin/
 
 # Variables d'environnement
 
-Le fichier `.env.example` sert de modèle.
+Le fichier `.env.example` sert de modèle pour créer le fichier `.env`.
 
 ```env
 POSTGRES_DB=helpdesk_db
@@ -359,15 +377,19 @@ POSTGRES_PORT=5432
 
 DJANGO_DEBUG=True
 DJANGO_SECRET_KEY=change_me
+
+DEFAULT_USER_PASSWORD=change_me
 ```
 
-## Générer une SECRET_KEY
+## Générer une `SECRET_KEY`
+
+Exécutez la commande suivante pour générer une clé secrète :
 
 ```bash
 docker compose exec web python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 
-Remplacer ensuite :
+Remplacez ensuite :
 
 ```text
 DJANGO_SECRET_KEY=change_me
@@ -375,11 +397,22 @@ DJANGO_SECRET_KEY=change_me
 
 par la clé générée.
 
-> Le fichier `.env` ne doit jamais être versionné.
+## `DEFAULT_USER_PASSWORD`
+
+Cette variable définit le mot de passe utilisé par la commande `seed_users` pour créer les utilisateurs de démonstration.
+
+Vous pouvez la modifier avant d'exécuter la commande :
+
+```bash
+docker compose exec web python manage.py seed_users
+```
+
+> **Important :**
+> Le fichier `.env` contient des informations sensibles et ne doit jamais être versionné.
 
 ---
 
-# Commandes utiles
+# Commandes de développement
 
 ## Docker
 
@@ -401,16 +434,22 @@ Arrêter les conteneurs et supprimer les données PostgreSQL :
 docker compose down -v
 ```
 
-Afficher les conteneurs :
+Afficher les conteneurs en cours d'exécution :
 
 ```bash
 docker compose ps
 ```
 
-Afficher les logs :
+Afficher les logs du conteneur web :
 
 ```bash
 docker compose logs web
+```
+
+Ouvrir un terminal dans le conteneur web :
+
+```bash
+docker compose exec web bash
 ```
 
 ---
@@ -435,18 +474,18 @@ Appliquer les migrations :
 docker compose exec web python manage.py migrate
 ```
 
-Créer un superutilisateur :
-
-```bash
-docker compose exec web python manage.py createsuperuser
-```
-
-Initialiser les données de référence :
+Initialiser les données de développement :
 
 ```bash
 docker compose exec web python manage.py seed_users
 
 docker compose exec web python manage.py seed_tickets
+```
+
+Créer un superutilisateur :
+
+```bash
+docker compose exec web python manage.py createsuperuser
 ```
 
 Exécuter une commande Django :
@@ -463,11 +502,11 @@ Chaque fonctionnalité est développée dans une branche dédiée.
 
 Le workflow suivi est le suivant :
 
-1. Créer une branche de fonctionnalité à partir de `main`.
+1. Créer une branche de fonctionnalité (`feature/...`) à partir de `main`.
 2. Développer la fonctionnalité.
 3. Tester le code.
 4. Mettre à jour le README si nécessaire.
-5. Créer un ou plusieurs commits atomiques.
+5. Créer un ou plusieurs commits atomiques en suivant les conventions de nommage.
 6. Pousser la branche sur GitHub.
 7. Ouvrir une Pull Request.
 8. Effectuer la revue de code.
@@ -504,7 +543,7 @@ git push origin --delete feature/my-feature
 
 # Convention de commits
 
-Le projet suit la convention **Conventional Commits**.
+Le projet suit la convention **Conventional Commits** afin de produire un historique Git clair, cohérent et facilement exploitable.
 
 Les principaux types utilisés sont :
 
@@ -515,7 +554,7 @@ Les principaux types utilisés sont :
 | `docs` | Documentation |
 | `refactor` | Refactorisation sans modification fonctionnelle |
 | `test` | Ajout ou modification de tests |
-| `chore` | Maintenance du projet |
+| `chore` | Tâches de maintenance |
 
 Exemples :
 
@@ -535,7 +574,8 @@ Les commits doivent être :
 
 - atomiques ;
 - explicites ;
-- centrés sur une seule fonctionnalité.
+- centrés sur une seule fonctionnalité ;
+- rédigés en anglais.
 
 ---
 
@@ -558,7 +598,7 @@ Les commits doivent être :
 
 - [x] Application `users`
 - [x] Modèle utilisateur personnalisé
-- [x] Django Admin
+- [x] Interface d'administration Django
 
 ---
 
@@ -580,7 +620,7 @@ Les commits doivent être :
 
 ### ✅ US-204 — Administration
 
-- [x] Django Admin
+- [x] Configuration de l'administration Django
 
 ---
 
@@ -595,7 +635,7 @@ Les commits doivent être :
 
 - [x] Serializer
 - [x] ViewSet
-- [x] Routes
+- [x] Endpoints
 
 ### ✅ US-303 — API des modèles de référence
 
@@ -604,7 +644,8 @@ Les commits doivent être :
 
 ### ✅ US-303.5 — Données de référence
 
-- [x] Commande `seed_data`
+- [x] Commande `seed_users`
+- [x] Commande `seed_tickets`
 
 ### ✅ US-304 — API des tickets
 
@@ -624,33 +665,34 @@ Les commits doivent être :
 - [x] Endpoints JWT
 - [x] Authentification par défaut
 - [x] Protection des endpoints
-- [x] Utilisation de request.user
+- [x] Utilisation de `request.user`
 
 ### ✅ US-307 — API des utilisateurs
 
-- [x] UserReadSerializer
-- [x] UserViewSet
+- [x] `UserReadSerializer`
+- [x] `UserViewSet`
 - [x] Endpoints
-- [x] ReadOnlyModelViewSet
+- [x] `ReadOnlyModelViewSet`
 
-### ⏳ US-308 — Gestion des rôles et permissions
+### ✅ US-308 — Gestion des rôles et permissions
 
-- [ ] Permissions personnalisées
-- [ ] Accès selon le rôle utilisateur
-- [ ] Protection des endpoints
-- [ ] Permissions sur les tickets
-- [ ] Permissions sur les affectations
+- [x] Permissions basées sur les rôles
+- [x] Contrôle d'accès selon le rôle utilisateur
+- [x] Protection des endpoints
+- [x] Permissions sur les tickets
+- [x] Permissions sur les affectations
+- [x] Permissions sur les données de référence (`Status`, `Priority`, `Category`)
 
 ### ⏳ US-309 — Documentation OpenAPI
 
-- [ ] Documentation interactive
+- [ ] Documentation interactive (Swagger / OpenAPI)
 
 ---
 
 ## Sprint 4 — Qualité
 
 - [ ] Tests unitaires
-- [ ] Tests d'API
+- [ ] Tests d'intégration de l'API
 - [ ] Pytest
 - [ ] Black
 - [ ] isort
@@ -663,9 +705,9 @@ Les commits doivent être :
 ## Sprint 5 — Industrialisation
 
 - [ ] GitHub Actions
-- [ ] Déploiement
 - [ ] Gunicorn
 - [ ] Nginx
+- [ ] Déploiement
 
 ---
 
@@ -685,7 +727,11 @@ Les commits doivent être :
 
 # Historique des sprints
 
-## Sprint 1
+## ✅ Sprint 1 — Infrastructure
+
+Objectif : mettre en place les fondations techniques du projet.
+
+User Stories réalisées :
 
 - US-101 — Initialisation du projet
 - US-102 — Configuration PostgreSQL
@@ -693,7 +739,11 @@ Les commits doivent être :
 
 ---
 
-## Sprint 2
+## ✅ Sprint 2 — Domaine métier
+
+Objectif : modéliser le domaine fonctionnel du HelpDesk.
+
+User Stories réalisées :
 
 - US-201 — Modèles de référence
 - US-202 — Modèle `Ticket`
@@ -702,21 +752,28 @@ Les commits doivent être :
 
 ---
 
-## Sprint 3
+## ✅ Sprint 3 — API REST
+
+Objectif : exposer le domaine métier via une API REST sécurisée.
+
+User Stories réalisées :
 
 - US-301 — Configuration de Django REST Framework
 - US-302 — API REST des statuts
 - US-303 — API REST des priorités et catégories
-- US-303.5 — Initialisation des données
+- US-303.5 — Initialisation des données de référence
 - US-304 — API REST des tickets
 - US-305 — API REST des affectations
 - US-306 — Authentification JWT
 - US-307 — API REST des utilisateurs
+- US-308 — Gestion des rôles et permissions
 
 ---
 
-# Licence
+# À propos du projet
 
-Projet réalisé dans un objectif d'apprentissage.
+Ce projet est réalisé dans un objectif d'apprentissage.
 
-L'ensemble du code est développé dans le but d'apprendre les bonnes pratiques de développement Backend avec Django et Django REST Framework.
+Il a pour but de mettre en pratique les bonnes pratiques de développement Backend avec Django, Django REST Framework et les outils couramment utilisés dans les équipes professionnelles.
+
+Le projet évolue progressivement au fil des sprints afin de reproduire un cycle de développement proche de celui rencontré en entreprise.
