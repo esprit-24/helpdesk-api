@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     # Third-party apps
     "rest_framework",
+    "drf_spectacular",
 
     # Local apps
     "apps.users.apps.UsersConfig",
@@ -145,7 +146,14 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 
 DEFAULT_USER_PASSWORD = env("DEFAULT_USER_PASSWORD")
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "HelpDesk API",
+    "DESCRIPTION": "REST API for managing IT support tickets.",
+    "VERSION": "1.0.0",
+}
