@@ -84,6 +84,9 @@ Fonctionnalités actuellement implémentées :
 - ✅ Authentification JWT
 - ✅ Contrôle d'accès basé sur les rôles (RBAC) et les règles métier
 - ✅ Permissions métier sur les tickets, affectations et données de référence
+- ✅ Documentation OpenAPI
+- ✅ Swagger UI
+- ✅ ReDoc
 
 ---
 
@@ -157,6 +160,7 @@ helpdesk-api/
 - Django 5.2
 - Django REST Framework 3.16
 - Simple JWT 5.5
+- drf-spectacular 0.29
 
 ## Base de données
 
@@ -359,6 +363,25 @@ Administration Django
 
 ```text
 http://localhost:8000/admin/
+```
+## 10. Documentation de l'API
+
+Swagger UI :
+
+```text
+http://localhost:8000/api/docs/
+```
+
+ReDoc :
+
+```text
+http://localhost:8000/api/redoc/
+```
+
+Schéma OpenAPI : 
+
+```text
+http://localhost:8000/api/schema/
 ```
 
 ---
@@ -683,9 +706,13 @@ Les commits doivent être :
 - [x] Permissions sur les affectations
 - [x] Permissions sur les données de référence (`Status`, `Priority`, `Category`)
 
-### ⏳ US-309 — Documentation OpenAPI
+### ✅ US-309 — Documentation OpenAPI
 
-- [ ] Documentation interactive (Swagger / OpenAPI)
+- [x] Installation de drf-spectacular
+- [x] Génération du schéma OpenAPI
+- [x] Documentation interactive avec Swagger UI
+- [x] Documentation avec ReDoc
+- [x] Intégration de l'authentification JWT
 
 ---
 
@@ -767,6 +794,7 @@ User Stories réalisées :
 - US-306 — Authentification JWT
 - US-307 — API REST des utilisateurs
 - US-308 — Gestion des rôles et permissions
+- US-309 — Documentation OpenAPI
 
 ---
 
