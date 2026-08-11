@@ -1,5 +1,5 @@
-from django.core.exceptions import ValidationError
 import pytest
+from django.core.exceptions import ValidationError
 
 from apps.users.models import User
 
@@ -34,6 +34,38 @@ def test_user_full_name():
 
     # Assert
     assert full_name == "John Doe"
+
+
+@pytest.mark.django_db
+def test_user_full_name_when_first_name_only():
+    # Arrange
+    user = User.objects.create_user(
+        username="john",
+        password="testpassword",
+        first_name="John",
+    )
+
+    # Act
+    full_name = user.full_name
+
+    # Assert
+    assert full_name == "John"
+
+
+@pytest.mark.django_db
+def test_user_full_name_when_last_name_only():
+    # Arrange
+    user = User.objects.create_user(
+        username="john",
+        password="testpassword",
+        last_name="Doe",
+    )
+
+    # Act
+    full_name = user.full_name
+
+    # Assert
+    assert full_name == "Doe"
 
 
 @pytest.mark.django_db

@@ -25,6 +25,9 @@ Ce projet a pour objectifs de :
 - Maîtriser Django, Django REST Framework et les bonnes pratiques de développement Backend.
 - Concevoir une API REST robuste et maintenable.
 - Utiliser PostgreSQL comme base de données relationnelle.
+- Approfondir PostgreSQL et SQL avancé.
+- Comprendre les transactions, les index, les fonctions, les procédures stockées, les triggers et les vues SQL.
+- Analyser et optimiser les performances des requêtes SQL.
 - Conteneuriser l'application avec Docker et Docker Compose.
 - Mettre en place des tests automatisés.
 - Intégrer des outils de qualité de code.
@@ -68,6 +71,7 @@ Fonctionnalités actuellement implémentées :
 
 ## Base de données
 
+- ✅ PostgreSQL
 - ✅ Gestion des migrations Django
 - ✅ Commande d'initialisation des utilisateurs (`seed_users`)
 - ✅ Commande d'initialisation des données de référence (`seed_tickets`)
@@ -87,6 +91,19 @@ Fonctionnalités actuellement implémentées :
 - ✅ Documentation OpenAPI
 - ✅ Swagger UI
 - ✅ ReDoc
+
+## Qualité et tests
+
+- ✅ Tests des modèles
+- ✅ Tests des permissions
+- ✅ Tests des serializers
+- ✅ Tests des ViewSets
+- ✅ Fixtures Pytest
+- ✅ `conftest.py`
+- ✅ Tests unitaires
+- ✅ Tests d'intégration de l'API
+- ✅ 117 tests automatisés
+- ✅ 117 tests passent
 
 ---
 
@@ -133,9 +150,27 @@ helpdesk-api/
 │   │
 │   └── manage.py
 │
+├── tests/
+│   ├── tickets/
+│   │   ├── conftest.py
+│   │   ├── test_models.py
+│   │   ├── test_permissions.py
+│   │   ├── test_serializers.py
+│   │   └── test_views.py
+│   │
+│   ├── users/
+│   │   ├── conftest.py
+│   │   ├── test_models.py
+│   │   ├── test_permissions.py
+│   │   ├── test_serializers.py
+│   │   └── test_views.py
+│   │
+│   └── test_smoke.py
+│
 ├── compose.yaml
 ├── .env.example
 ├── .gitignore
+├── pytest.ini
 └── README.md
 ```
 
@@ -149,6 +184,7 @@ helpdesk-api/
 - **src/apps/users/** : gestion des utilisateurs, des rôles et des permissions.
 - **src/apps/tickets/** : gestion des tickets, des affectations et des données de référence.
 - **src/config/** : configuration globale de Django (settings et routes principales).
+- **tests/** : tests automatisés organisés par application et par responsabilité (modèles, permissions, serializers et ViewSets).
 
 ---
 
@@ -157,14 +193,15 @@ helpdesk-api/
 ## Backend
 
 - Python 3.13
-- Django 5.2
-- Django REST Framework 3.16
-- Simple JWT 5.5
-- drf-spectacular 0.29
+- Django 5.2.6
+- Django REST Framework 3.16.1
+- Simple JWT 5.5.1
+- drf-spectacular 0.29.0
 
 ## Base de données
 
 - PostgreSQL 17
+- psycopg 3.3.4
 
 ## Conteneurisation
 
@@ -173,17 +210,21 @@ helpdesk-api/
 
 ## Configuration
 
-- django-environ 0.12
-- Variables d'environnement (.env)
+- django-environ 0.12.0
+- Variables d'environnement (`.env`)
 
 ## Versionnement
 
 - Git
 - GitHub
 
-## Outils d'industrialisation
+## Tests
 
-- Pytest
+- Pytest 9.1.1
+- pytest-django 4.12.0
+
+## Outils de qualité et d'industrialisation
+
 - Black
 - isort
 - Flake8
@@ -204,7 +245,7 @@ Avant de lancer le projet, assurez-vous de disposer des outils suivants :
 - Docker Desktop
 
 > **Remarque :**
-> Aucun environnement virtuel Python n'est nécessaire. L'ensemble de l'application s'exécute dans des conteneurs Docker.
+> Aucun environnement virtuel Python n'est nécessaire. L'ensemble de l'application et des outils de développement s'exécute dans des conteneurs Docker.
 
 ---
 
@@ -301,7 +342,45 @@ Les commandes sont **idempotentes** : elles peuvent être exécutées plusieurs 
 
 ---
 
-## 7. Obtenir un JWT
+## 7. Vérifier la configuration
+
+```bash
+docker compose exec web python manage.py check
+```
+
+La commande doit retourner :
+
+```text
+System check identified no issues (0 silenced).
+```
+
+---
+
+## 8. Exécuter les tests
+
+### Exécuter l'ensemble de la suite de tests : 
+
+```bash
+docker compose exec web pytest
+```
+
+### Exécuter les tests de l'application `users` : 
+
+```bash
+docker compose exec web pytest tests/users/
+```
+
+### Exécuter les tests de l'application `tickets` : 
+
+```bash
+docker compose exec web pytest tests/tickets/
+```
+
+La suite actuelle contient `117 tests automatisés.`
+
+---
+
+## 9. Obtenir un JWT
 
 Authentifiez-vous avec l'un des utilisateurs créés par `seed_users` ou avec votre superutilisateur.
 
@@ -337,21 +416,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-## 8. Vérifier la configuration
-
-```bash
-docker compose exec web python manage.py check
-```
-
-La commande doit retourner :
-
-```text
-System check identified no issues (0 silenced).
-```
-
----
-
-## 9. Accéder à l'application
+## 10. Accéder à l'application
 
 API REST
 
@@ -364,7 +429,7 @@ Administration Django
 ```text
 http://localhost:8000/admin/
 ```
-## 10. Documentation de l'API
+## 11. Documentation de l'API
 
 Swagger UI :
 
@@ -445,6 +510,12 @@ Construire et démarrer les conteneurs :
 docker compose up --build -d
 ```
 
+Démarrer les conteneurs sans reconstruire les images : 
+
+```bash
+docker compose up -d
+```
+
 Arrêter les conteneurs :
 
 ```bash
@@ -515,6 +586,26 @@ Exécuter une commande Django :
 
 ```bash
 docker compose exec web python manage.py <commande>
+```
+
+## Tests
+
+Exécuter l'ensemble de la suite de tests : 
+
+```bash
+docker compose exec web pytest
+```
+
+Exécuter les tests de l'application `users`: 
+
+```bash
+docker compose exec web pytest tests/users/
+```
+
+Exécuter les tests de l'application `tickets`: 
+
+```bash
+docker compose exec web pytest tests/tickets/
 ```
 
 ---
@@ -718,37 +809,71 @@ Les commits doivent être :
 
 ## Sprint 4 — Qualité
 
-- [ ] Tests unitaires
-- [ ] Tests d'intégration de l'API
-- [ ] Pytest
+- [x] Tests des modèles
+- [x] Tests des permissions
+- [x] Tests des serializers
+- [x] Tests des ViewSets
+- [x] Fixtures Pytest
+- [x] `conftest.py`
+- [x] Tests unitaires
+- [x] Tests d'intégration de l'API
+- [x] Pytest
+- [x] 117 tests automatisés
 - [ ] Black
 - [ ] isort
 - [ ] Flake8
 - [ ] Bandit
 - [ ] pre-commit
 
+**État :** 🟡 En cours
+
 ---
 
-## Sprint 5 — Industrialisation
+## Sprint 5 — PostgreSQL avancé
+
+- [ ] Comprendre les transactions PostgreSQL
+- [ ] Comprendre les niveaux d'isolation
+- [ ] Approfondir les contraintes d'intégrité
+- [ ] Index et index composites
+- [ ] Requêtes SQL avancées
+- [ ] Fonctions PostgreSQL
+- [ ] Procédures stockées
+- [ ] Triggers PostgreSQL
+- [ ] Vues SQL
+- [ ] Analyse des performances avec `EXPLAIN`
+- [ ] Analyse des performances avec `EXPLAIN ANALYZE`
+- [ ] Intégration des fonctionnalités PostgreSQL avec Django
+
+**État :** ⚪ À venir
+
+---
+
+## Sprint 6 — Industrialisation
 
 - [ ] GitHub Actions
 - [ ] Gunicorn
 - [ ] Nginx
 - [ ] Déploiement
 
+**État :** ⚪ À venir
+
 ---
 
-## Sprint 6 — Intégration GLPI
+## Sprint 7 — Intégration GLPI
 
 - [ ] Authentification GLPI
 - [ ] Synchronisation avec GLPI
 
+**État :** ⚪ À venir
+
 ---
 
-## Sprint 7 — Kubernetes
+## Sprint 8 — Kubernetes
 
 - [ ] Découverte de Kubernetes
 - [ ] Déploiement de l'application
+
+**État :** ⚪ À venir
 
 ---
 
@@ -795,6 +920,33 @@ User Stories réalisées :
 - US-307 — API REST des utilisateurs
 - US-308 — Gestion des rôles et permissions
 - US-309 — Documentation OpenAPI
+
+---
+
+## 🟡 Sprint 4 — Qualité et tests
+
+Objectif : mettre en place une stratégie de tests automatisés et améliorer la qualité du code.
+
+Travail réalisé :
+
+- Tests des modèles
+- Tests des permissions
+- Tests des serializers
+- Tests des ViewSets
+- Fixtures Pytest
+- Organisation des fixtures avec `conftest.py`
+- Tests unitaires
+- Tests d'intégration de l'API
+- 117 tests automatisés
+- 117 tests passent
+
+Travail restant :
+
+- Black
+- isort
+- Flake8
+- Bandit
+- pre-commit
 
 ---
 
