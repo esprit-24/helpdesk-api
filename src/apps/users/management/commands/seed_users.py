@@ -71,11 +71,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.seed_users()
 
-        self.stdout.write(
-            self.style.SUCCESS(
-                "Users seeded successfully."
-            )
-        )
+        self.stdout.write(self.style.SUCCESS("Users seeded successfully."))
 
     def seed_users(self):
         for user_data in USERS:
@@ -83,9 +79,7 @@ class Command(BaseCommand):
 
             if User.objects.filter(username=username).exists():
                 self.stdout.write(
-                    self.style.WARNING(
-                        f"User '{username}' already exists."
-                    )
+                    self.style.WARNING(f"User '{username}' already exists.")
                 )
                 continue
 
@@ -94,9 +88,4 @@ class Command(BaseCommand):
                 password=settings.DEFAULT_USER_PASSWORD,
             )
 
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f"User '{username}' created."
-                )
-            )
-            
+            self.stdout.write(self.style.SUCCESS(f"User '{username}' created."))

@@ -89,7 +89,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 
 class Ticket(models.Model):
     """
@@ -166,7 +166,7 @@ class Ticket(models.Model):
 
     def __str__(self):
         return self.title
-    
+
 
 class Assignment(models.Model):
     """

@@ -2,10 +2,10 @@ from rest_framework.permissions import BasePermission
 
 from apps.users.models import User
 
-
 ####################################################
 # Role-based permissions
 ####################################################
+
 
 class IsAdmin(BasePermission):
     """
@@ -13,10 +13,7 @@ class IsAdmin(BasePermission):
     """
 
     def has_permission(self, request, view):
-        return (
-            request.user.is_authenticated
-            and request.user.role == User.Role.ADMIN
-        )
+        return request.user.is_authenticated and request.user.role == User.Role.ADMIN
 
     def has_object_permission(self, request, view, obj):
         return self.has_permission(
@@ -31,12 +28,9 @@ class IsManagerOrAdmin(BasePermission):
     """
 
     def has_permission(self, request, view):
-        return (
-            request.user.is_authenticated
-            and request.user.role in (
-                User.Role.ADMIN,
-                User.Role.MANAGER,
-            )
+        return request.user.is_authenticated and request.user.role in (
+            User.Role.ADMIN,
+            User.Role.MANAGER,
         )
 
     def has_object_permission(self, request, view, obj):
@@ -49,6 +43,7 @@ class IsManagerOrAdmin(BasePermission):
 ####################################################
 # Ticket permissions
 ####################################################
+
 
 class CanViewTicket(BasePermission):
     """
@@ -78,6 +73,7 @@ class CanViewTicket(BasePermission):
 ####################################################
 # Assignment permissions
 ####################################################
+
 
 class CanViewAssignment(BasePermission):
     """

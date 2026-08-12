@@ -57,6 +57,7 @@ class TicketAdmin(admin.ModelAdmin):
         "category",
     )
 
+
 @admin.register(Assignment)
 class AssignmentAdmin(admin.ModelAdmin):
     list_display = (

@@ -11,7 +11,7 @@ class User(AbstractUser):
         """
         Available user roles.
         """
-        
+
         REQUESTER = "REQUESTER", "Requester"
         TECHNICIAN = "TECHNICIAN", "Technician"
         MANAGER = "MANAGER", "Manager"

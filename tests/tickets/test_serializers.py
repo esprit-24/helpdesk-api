@@ -18,7 +18,6 @@ from apps.tickets.serializers import (
     TicketWriteSerializer,
 )
 
-
 # ============================================================
 # Status serializers
 # ============================================================

@@ -2,7 +2,6 @@ from django.core.management.base import BaseCommand
 
 from apps.tickets.models import Category, Priority, Status
 
-
 STATUSES = [
     {
         "name": "Open",
@@ -88,21 +87,14 @@ class Command(BaseCommand):
     Populate the database with reference data.
     """
 
-    help = (
-        "Populate the database with default "
-        "statuses, priorities and categories."
-    )
+    help = "Populate the database with default " "statuses, priorities and categories."
 
     def handle(self, *args, **options):
         self.seed_statuses()
         self.seed_priorities()
         self.seed_categories()
 
-        self.stdout.write(
-            self.style.SUCCESS(
-                "Reference data seeded successfully."
-            )
-        )
+        self.stdout.write(self.style.SUCCESS("Reference data seeded successfully."))
 
     def seed_statuses(self):
         for status_data in STATUSES:
@@ -117,9 +109,7 @@ class Command(BaseCommand):
 
             if created:
                 self.stdout.write(
-                    self.style.SUCCESS(
-                        f"Status '{status_data['name']}' created."
-                    )
+                    self.style.SUCCESS(f"Status '{status_data['name']}' created.")
                 )
             else:
                 self.stdout.write(
@@ -140,9 +130,7 @@ class Command(BaseCommand):
 
             if created:
                 self.stdout.write(
-                    self.style.SUCCESS(
-                        f"Priority '{priority_data['name']}' created."
-                    )
+                    self.style.SUCCESS(f"Priority '{priority_data['name']}' created.")
                 )
             else:
                 self.stdout.write(
@@ -162,9 +150,7 @@ class Command(BaseCommand):
 
             if created:
                 self.stdout.write(
-                    self.style.SUCCESS(
-                        f"Category '{category_data['name']}' created."
-                    )
+                    self.style.SUCCESS(f"Category '{category_data['name']}' created.")
                 )
             else:
                 self.stdout.write(
