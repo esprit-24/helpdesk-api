@@ -1,6 +1,5 @@
-from django.core.exceptions import ValidationError
-
 import pytest
+from django.core.exceptions import ValidationError
 
 from apps.tickets.models import Assignment, Category, Priority, Status, Ticket
 
