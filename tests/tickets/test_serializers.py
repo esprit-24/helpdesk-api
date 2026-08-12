@@ -3,7 +3,6 @@ from datetime import timedelta
 import pytest
 from django.utils import timezone
 
-from apps.tickets.models import Assignment, Ticket
 from apps.tickets.serializers import (
     AssignmentReadSerializer,
     AssignmentWriteSerializer,
