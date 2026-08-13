@@ -95,9 +95,7 @@ def test_user_can_retrieve_own_profile(requester):
     client.force_authenticate(user=requester)
 
     # Act
-    response = client.get(
-        f"/api/users/{requester.id}/"
-    )
+    response = client.get(f"/api/users/{requester.id}/")
 
     # Assert
     assert response.status_code == 200
@@ -117,9 +115,7 @@ def test_unauthenticated_user_cannot_retrieve_profile(requester):
     client = APIClient()
 
     # Act
-    response = client.get(
-        f"/api/users/{requester.id}/"
-    )
+    response = client.get(f"/api/users/{requester.id}/")
 
     # Assert
     assert response.status_code == 401
@@ -138,9 +134,7 @@ def test_user_cannot_retrieve_other_profile(requester):
     client.force_authenticate(user=requester)
 
     # Act
-    response = client.get(
-        f"/api/users/{other_user.id}/"
-    )
+    response = client.get(f"/api/users/{other_user.id}/")
 
     # Assert
     assert response.status_code == 403
@@ -156,9 +150,7 @@ def test_technician_cannot_retrieve_other_profile(
     client.force_authenticate(user=technician)
 
     # Act
-    response = client.get(
-        f"/api/users/{requester.id}/"
-    )
+    response = client.get(f"/api/users/{requester.id}/")
 
     # Assert
     assert response.status_code == 403
@@ -174,9 +166,7 @@ def test_manager_can_retrieve_other_profile(
     client.force_authenticate(user=manager)
 
     # Act
-    response = client.get(
-        f"/api/users/{requester.id}/"
-    )
+    response = client.get(f"/api/users/{requester.id}/")
 
     # Assert
     assert response.status_code == 200
@@ -200,9 +190,7 @@ def test_admin_can_retrieve_other_profile(
     client.force_authenticate(user=admin)
 
     # Act
-    response = client.get(
-        f"/api/users/{requester.id}/"
-    )
+    response = client.get(f"/api/users/{requester.id}/")
 
     # Assert
     assert response.status_code == 200

@@ -8,7 +8,6 @@ from apps.tickets.views import (
     TicketViewSet,
 )
 
-
 router = DefaultRouter()
 
 router.register(

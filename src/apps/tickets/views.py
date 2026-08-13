@@ -25,10 +25,10 @@ from apps.tickets.serializers import (
 )
 from apps.users.models import User
 
-
 ####################################################
 # Status ViewSet
 ####################################################
+
 
 class StatusViewSet(viewsets.ModelViewSet):
     """
@@ -63,15 +63,13 @@ class StatusViewSet(viewsets.ModelViewSet):
                 IsAuthenticated,
             ]
 
-        return [
-            permission()
-            for permission in permission_classes
-        ]
+        return [permission() for permission in permission_classes]
 
 
 ####################################################
 # Priority ViewSet
 ####################################################
+
 
 class PriorityViewSet(viewsets.ModelViewSet):
     """
@@ -106,15 +104,13 @@ class PriorityViewSet(viewsets.ModelViewSet):
                 IsAuthenticated,
             ]
 
-        return [
-            permission()
-            for permission in permission_classes
-        ]
+        return [permission() for permission in permission_classes]
 
 
 ####################################################
 # Category ViewSet
 ####################################################
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     """
@@ -149,15 +145,13 @@ class CategoryViewSet(viewsets.ModelViewSet):
                 IsAuthenticated,
             ]
 
-        return [
-            permission()
-            for permission in permission_classes
-        ]
+        return [permission() for permission in permission_classes]
 
 
 ####################################################
 # Ticket ViewSet
 ####################################################
+
 
 class TicketViewSet(viewsets.ModelViewSet):
     """
@@ -232,10 +226,7 @@ class TicketViewSet(viewsets.ModelViewSet):
                 IsAuthenticated,
             ]
 
-        return [
-            permission()
-            for permission in permission_classes
-        ]
+        return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
         """
@@ -249,6 +240,7 @@ class TicketViewSet(viewsets.ModelViewSet):
 ####################################################
 # Assignment ViewSet
 ####################################################
+
 
 class AssignmentViewSet(viewsets.ModelViewSet):
     """
@@ -314,10 +306,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
                 IsAuthenticated,
             ]
 
-        return [
-            permission()
-            for permission in permission_classes
-        ]
+        return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
         """

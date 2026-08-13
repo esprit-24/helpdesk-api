@@ -3,7 +3,6 @@ from rest_framework.test import APIClient
 
 from apps.tickets.models import Assignment, Ticket
 
-
 # ============================================================
 # Status
 # ============================================================
@@ -145,9 +144,7 @@ def test_admin_can_delete_status(admin, status):
     client.force_authenticate(user=admin)
 
     # Act
-    response = client.delete(
-        f"/api/statuses/{status.id}/"
-    )
+    response = client.delete(f"/api/statuses/{status.id}/")
 
     # Assert
     assert response.status_code == 204
@@ -160,9 +157,7 @@ def test_manager_cannot_delete_status(manager, status):
     client.force_authenticate(user=manager)
 
     # Act
-    response = client.delete(
-        f"/api/statuses/{status.id}/"
-    )
+    response = client.delete(f"/api/statuses/{status.id}/")
 
     # Assert
     assert response.status_code == 403
@@ -260,9 +255,7 @@ def test_admin_can_delete_priority(admin, priority):
     client.force_authenticate(user=admin)
 
     # Act
-    response = client.delete(
-        f"/api/priorities/{priority.id}/"
-    )
+    response = client.delete(f"/api/priorities/{priority.id}/")
 
     # Assert
     assert response.status_code == 204
@@ -275,9 +268,7 @@ def test_manager_cannot_delete_priority(manager, priority):
     client.force_authenticate(user=manager)
 
     # Act
-    response = client.delete(
-        f"/api/priorities/{priority.id}/"
-    )
+    response = client.delete(f"/api/priorities/{priority.id}/")
 
     # Assert
     assert response.status_code == 403
@@ -372,9 +363,7 @@ def test_admin_can_delete_category(admin, category):
     client.force_authenticate(user=admin)
 
     # Act
-    response = client.delete(
-        f"/api/categories/{category.id}/"
-    )
+    response = client.delete(f"/api/categories/{category.id}/")
 
     # Assert
     assert response.status_code == 204
@@ -387,9 +376,7 @@ def test_manager_cannot_delete_category(manager, category):
     client.force_authenticate(user=manager)
 
     # Act
-    response = client.delete(
-        f"/api/categories/{category.id}/"
-    )
+    response = client.delete(f"/api/categories/{category.id}/")
 
     # Assert
     assert response.status_code == 403
@@ -502,9 +489,7 @@ def test_requester_is_automatically_set_on_ticket_creation(
     # Assert
     assert response.status_code == 201
 
-    created_ticket = Ticket.objects.get(
-        title="New computer issue"
-    )
+    created_ticket = Ticket.objects.get(title="New computer issue")
 
     assert created_ticket.requester == requester
 
@@ -519,9 +504,7 @@ def test_requester_can_retrieve_own_ticket(
     client.force_authenticate(user=requester)
 
     # Act
-    response = client.get(
-        f"/api/tickets/{ticket.id}/"
-    )
+    response = client.get(f"/api/tickets/{ticket.id}/")
 
     # Assert
     assert response.status_code == 200
@@ -538,9 +521,7 @@ def test_requester_cannot_retrieve_other_ticket(
     client.force_authenticate(user=requester)
 
     # Act
-    response = client.get(
-        f"/api/tickets/{other_ticket.id}/"
-    )
+    response = client.get(f"/api/tickets/{other_ticket.id}/")
 
     # Assert
     assert response.status_code == 404
@@ -557,9 +538,7 @@ def test_technician_can_retrieve_assigned_ticket(
     client.force_authenticate(user=technician)
 
     # Act
-    response = client.get(
-        f"/api/tickets/{ticket.id}/"
-    )
+    response = client.get(f"/api/tickets/{ticket.id}/")
 
     # Assert
     assert response.status_code == 200
@@ -625,9 +604,7 @@ def test_admin_can_delete_ticket(
     client.force_authenticate(user=admin)
 
     # Act
-    response = client.delete(
-        f"/api/tickets/{ticket.id}/"
-    )
+    response = client.delete(f"/api/tickets/{ticket.id}/")
 
     # Assert
     assert response.status_code == 204
@@ -643,9 +620,7 @@ def test_manager_cannot_delete_ticket(
     client.force_authenticate(user=manager)
 
     # Act
-    response = client.delete(
-        f"/api/tickets/{ticket.id}/"
-    )
+    response = client.delete(f"/api/tickets/{ticket.id}/")
 
     # Assert
     assert response.status_code == 403
@@ -790,9 +765,7 @@ def test_manager_can_delete_assignment(
     client.force_authenticate(user=manager)
 
     # Act
-    response = client.delete(
-        f"/api/assignments/{assignment.id}/"
-    )
+    response = client.delete(f"/api/assignments/{assignment.id}/")
 
     # Assert
     assert response.status_code == 204
@@ -808,9 +781,7 @@ def test_technician_cannot_delete_assignment(
     client.force_authenticate(user=technician)
 
     # Act
-    response = client.delete(
-        f"/api/assignments/{assignment.id}/"
-    )
+    response = client.delete(f"/api/assignments/{assignment.id}/")
 
     # Assert
     assert response.status_code == 403

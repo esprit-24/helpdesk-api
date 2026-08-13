@@ -10,7 +10,6 @@ from apps.tickets.models import (
 from apps.users.models import User
 from apps.users.serializers import UserSummarySerializer
 
-
 ####################################################
 # Status serializers
 ####################################################

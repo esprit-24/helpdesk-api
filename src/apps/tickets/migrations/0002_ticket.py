@@ -8,30 +8,108 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tickets', '0001_initial'),
+        ("tickets", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Ticket',
+            name="Ticket",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(help_text='Short summary of the issue.', max_length=255)),
-                ('description', models.TextField(blank=True, help_text='Detailed description of the issue.')),
-                ('created_at', models.DateTimeField(auto_now_add=True, help_text='Date and time when the ticket was created.')),
-                ('updated_at', models.DateTimeField(auto_now=True, help_text='Date and time of the last updated.')),
-                ('closed_at', models.DateTimeField(blank=True, help_text='Date and time when the ticket was closed.', null=True)),
-                ('category', models.ForeignKey(help_text='Category assigned to the ticket.', on_delete=django.db.models.deletion.PROTECT, related_name='tickets', to='tickets.category')),
-                ('owner', models.ForeignKey(blank=True, help_text='User responsible for the ticket.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='owned_tickets', to=settings.AUTH_USER_MODEL)),
-                ('priority', models.ForeignKey(help_text='Priority assigned to the ticket.', on_delete=django.db.models.deletion.PROTECT, related_name='tickets', to='tickets.priority')),
-                ('requester', models.ForeignKey(help_text='User who created the ticket.', on_delete=django.db.models.deletion.PROTECT, related_name='requested_tickets', to=settings.AUTH_USER_MODEL)),
-                ('status', models.ForeignKey(help_text='Current status of the ticket.', on_delete=django.db.models.deletion.PROTECT, related_name='tickets', to='tickets.status')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        help_text="Short summary of the issue.", max_length=255
+                    ),
+                ),
+                (
+                    "description",
+                    models.TextField(
+                        blank=True, help_text="Detailed description of the issue."
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True,
+                        help_text="Date and time when the ticket was created.",
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(
+                        auto_now=True, help_text="Date and time of the last updated."
+                    ),
+                ),
+                (
+                    "closed_at",
+                    models.DateTimeField(
+                        blank=True,
+                        help_text="Date and time when the ticket was closed.",
+                        null=True,
+                    ),
+                ),
+                (
+                    "category",
+                    models.ForeignKey(
+                        help_text="Category assigned to the ticket.",
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="tickets",
+                        to="tickets.category",
+                    ),
+                ),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        blank=True,
+                        help_text="User responsible for the ticket.",
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="owned_tickets",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "priority",
+                    models.ForeignKey(
+                        help_text="Priority assigned to the ticket.",
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="tickets",
+                        to="tickets.priority",
+                    ),
+                ),
+                (
+                    "requester",
+                    models.ForeignKey(
+                        help_text="User who created the ticket.",
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="requested_tickets",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "status",
+                    models.ForeignKey(
+                        help_text="Current status of the ticket.",
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="tickets",
+                        to="tickets.status",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Ticket',
-                'verbose_name_plural': 'Tickets',
-                'ordering': ['-created_at'],
+                "verbose_name": "Ticket",
+                "verbose_name_plural": "Tickets",
+                "ordering": ["-created_at"],
             },
         ),
     ]

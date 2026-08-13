@@ -104,6 +104,11 @@ Fonctionnalités actuellement implémentées :
 - ✅ Tests d'intégration de l'API
 - ✅ 117 tests automatisés
 - ✅ 117 tests passent
+- ✅ Black
+- ✅ isort
+- ✅ Flake8
+- ✅ Bandit
+- ✅ pre-commit
 
 ---
 
@@ -167,9 +172,12 @@ helpdesk-api/
 │   │
 │   └── test_smoke.py
 │
-├── compose.yaml
+├── .flake8
+├── .pre-commit-config.yaml
 ├── .env.example
 ├── .gitignore
+├── compose.yaml
+├── pyproject.toml
 ├── pytest.ini
 └── README.md
 ```
@@ -223,17 +231,13 @@ helpdesk-api/
 - Pytest 9.1.1
 - pytest-django 4.12.0
 
-## Outils de qualité et d'industrialisation
+## Outils de qualité
 
-- Black
-- isort
-- Flake8
-- Bandit
-- pre-commit
-- GitHub Actions
-- Gunicorn
-- Nginx
-- Kubernetes
+- Black 26.5.1
+- isort 8.0.1
+- Flake8 7.3.0
+- Bandit 1.9.4
+- pre-commit 4.6.1
 
 ---
 
@@ -243,9 +247,11 @@ Avant de lancer le projet, assurez-vous de disposer des outils suivants :
 
 - Git
 - Docker Desktop
+- Python 3.14+ sur la machine hôte pour installer `pre-commit`
 
 > **Remarque :**
-> Aucun environnement virtuel Python n'est nécessaire. L'ensemble de l'application et des outils de développement s'exécute dans des conteneurs Docker.
+> L'application Django et les principaux outils de développement sont exécutés dans des conteneurs Docker.
+> Un environnement virtuel Python local (`.venv`) est utilisé uniquement pour exécuter `pre-commit` comme hook Git sur la machine du développeur.
 
 ---
 
@@ -267,7 +273,35 @@ cd helpdesk-api
 
 ---
 
-## 2. Créer le fichier `.env`
+## 2. Préparer l'environnement local pour pre-commit
+
+Créer un environnement virtuel Python :
+
+```bash
+python -m venv .venv
+```
+
+Installer `pre-commit` :
+
+```bash
+.venv\Scripts\python.exe -m pip install pre-commit==4.6.1
+```
+
+Installer le hook Git :
+
+```bash
+.venv\Scripts\pre-commit.exe install
+```
+
+Vérifier l'installation :
+
+```bash
+.venv\Scripts\pre-commit.exe --version
+```
+
+---
+
+## 3. Créer le fichier `.env`
 
 Copier le fichier :
 
@@ -285,7 +319,7 @@ Puis adaptez les valeurs à votre environnement.
 
 ---
 
-## 3. Construire et démarrer les conteneurs
+## 4. Construire et démarrer les conteneurs
 
 ```bash
 docker compose up --build -d
@@ -299,7 +333,7 @@ docker compose ps
 
 ---
 
-## 4. Appliquer les migrations
+## 5. Appliquer les migrations
 
 ```bash
 docker compose exec web python manage.py migrate
@@ -307,7 +341,7 @@ docker compose exec web python manage.py migrate
 
 ---
 
-## 5. Créer un superutilisateur (optionnel)
+## 6. Créer un superutilisateur (optionnel)
 
 ```bash
 docker compose exec web python manage.py createsuperuser
@@ -317,7 +351,7 @@ Cette commande permet de créer un superutilisateur Django.
 
 ---
 
-## 6. Initialiser les données de développement
+## 7. Initialiser les données de développement
 
 ```bash
 docker compose exec web python manage.py seed_users
@@ -342,7 +376,7 @@ Les commandes sont **idempotentes** : elles peuvent être exécutées plusieurs 
 
 ---
 
-## 7. Vérifier la configuration
+## 8. Vérifier la configuration
 
 ```bash
 docker compose exec web python manage.py check
@@ -356,7 +390,7 @@ System check identified no issues (0 silenced).
 
 ---
 
-## 8. Exécuter les tests
+## 9. Exécuter les tests
 
 ### Exécuter l'ensemble de la suite de tests : 
 
@@ -378,9 +412,19 @@ docker compose exec web pytest tests/tickets/
 
 La suite actuelle contient `117 tests automatisés.`
 
+### Vérifier la qualité du code
+
+Les outils de qualité sont exécutés automatiquement par `pre-commit` avant chaque commit.
+
+Pour exécuter manuellement tous les hooks sur l'ensemble du projet :
+
+```bash
+.venv\Scripts\pre-commit.exe run --all-files
+```
+
 ---
 
-## 9. Obtenir un JWT
+## 10. Obtenir un JWT
 
 Authentifiez-vous avec l'un des utilisateurs créés par `seed_users` ou avec votre superutilisateur.
 
@@ -416,7 +460,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-## 10. Accéder à l'application
+## 11. Accéder à l'application
 
 API REST
 
@@ -429,7 +473,8 @@ Administration Django
 ```text
 http://localhost:8000/admin/
 ```
-## 11. Documentation de l'API
+
+## 12. Documentation de l'API
 
 Swagger UI :
 
@@ -608,6 +653,14 @@ Exécuter les tests de l'application `tickets`:
 docker compose exec web pytest tests/tickets/
 ```
 
+## Qualité du code
+
+Exécuter tous les hooks `pre-commit` sur l'ensemble du projet :
+
+```bash
+.venv\Scripts\pre-commit.exe run --all-files
+```
+
 ---
 
 # Workflow Git
@@ -618,40 +671,16 @@ Le workflow suivi est le suivant :
 
 1. Créer une branche de fonctionnalité (`feature/...`) à partir de `main`.
 2. Développer la fonctionnalité.
-3. Tester le code.
-4. Mettre à jour le README si nécessaire.
+3. Exécuter les tests avec Pytest.
+4. Ajouter les fichiers à l'index avec `git add`.
 5. Créer un ou plusieurs commits atomiques en suivant les conventions de nommage.
+   Les hooks `pre-commit` exécutent automatiquement Black, isort, Flake8 et Bandit avant chaque commit.
 6. Pousser la branche sur GitHub.
 7. Ouvrir une Pull Request.
 8. Effectuer la revue de code.
 9. Fusionner la Pull Request dans `main`.
 10. Revenir sur `main` et récupérer les dernières modifications.
 11. Supprimer les branches locale et distante.
-
-Exemple :
-
-```bash
-git checkout main
-git pull
-
-git checkout -b feature/my-feature
-
-# Développement...
-
-git add .
-git commit -m "feat(...): ..."
-git push -u origin feature/my-feature
-```
-
-Après la fusion :
-
-```bash
-git checkout main
-git pull
-
-git branch -d feature/my-feature
-git push origin --delete feature/my-feature
-```
 
 ---
 
@@ -819,13 +848,13 @@ Les commits doivent être :
 - [x] Tests d'intégration de l'API
 - [x] Pytest
 - [x] 117 tests automatisés
-- [ ] Black
-- [ ] isort
-- [ ] Flake8
-- [ ] Bandit
-- [ ] pre-commit
+- [x] Black
+- [x] isort
+- [x] Flake8
+- [x] Bandit
+- [x] pre-commit
 
-**État :** 🟡 En cours
+**État :** ✅ Terminé
 
 ---
 
@@ -848,12 +877,16 @@ Les commits doivent être :
 
 ---
 
-## Sprint 6 — Industrialisation
+## Sprint 6 — CI/CD & Industrialisation
 
 - [ ] GitHub Actions
+- [ ] Jenkins
+- [ ] CI avec tests et contrôles de qualité
+- [ ] Build d'une image Docker de production
 - [ ] Gunicorn
 - [ ] Nginx
-- [ ] Déploiement
+- [ ] Gestion des variables et secrets en production
+- [ ] Déploiement de l'application
 
 **État :** ⚪ À venir
 
@@ -923,9 +956,9 @@ User Stories réalisées :
 
 ---
 
-## 🟡 Sprint 4 — Qualité et tests
+## ✅ Sprint 4 — Qualité et tests
 
-Objectif : mettre en place une stratégie de tests automatisés et améliorer la qualité du code.
+Objectif : mettre en place une stratégie de tests automatisés et améliorer la qualité et la sécurité du code.
 
 Travail réalisé :
 
@@ -939,9 +972,6 @@ Travail réalisé :
 - Tests d'intégration de l'API
 - 117 tests automatisés
 - 117 tests passent
-
-Travail restant :
-
 - Black
 - isort
 - Flake8

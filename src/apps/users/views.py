@@ -5,7 +5,7 @@ from apps.users.models import User
 from apps.users.permissions import (
     IsManagerOrAdmin,
     IsSelfOrManagerOrAdmin,
-)   
+)
 from apps.users.serializers import UserReadSerializer
 
 

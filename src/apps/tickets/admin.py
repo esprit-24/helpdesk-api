@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Priority, Status, Ticket, Assignment
+from .models import Assignment, Category, Priority, Status, Ticket
 
 
 @admin.register(Status)
@@ -56,6 +56,7 @@ class TicketAdmin(admin.ModelAdmin):
         "priority",
         "category",
     )
+
 
 @admin.register(Assignment)
 class AssignmentAdmin(admin.ModelAdmin):

@@ -9,14 +9,11 @@ class IsManagerOrAdmin(BasePermission):
     """
 
     def has_permission(self, request, view):
-        return (
-            request.user.is_authenticated
-            and request.user.role in (
-                User.Role.MANAGER,
-                User.Role.ADMIN,
-            )
+        return request.user.is_authenticated and request.user.role in (
+            User.Role.MANAGER,
+            User.Role.ADMIN,
         )
-    
+
 
 class IsSelfOrManagerOrAdmin(BasePermission):
     """
@@ -25,10 +22,7 @@ class IsSelfOrManagerOrAdmin(BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        return (
-            request.user == obj
-            or request.user.role in (
-                User.Role.MANAGER,
-                User.Role.ADMIN,
-            )
+        return request.user == obj or request.user.role in (
+            User.Role.MANAGER,
+            User.Role.ADMIN,
         )

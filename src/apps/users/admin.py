@@ -33,17 +33,13 @@ class UserAdmin(BaseUserAdmin):
         "email",
     )
 
-    ordering = (
-        "username",
-    )
+    ordering = ("username",)
 
     fieldsets = BaseUserAdmin.fieldsets + (
         (
             "Helpdesk",
             {
-                "fields": (
-                    "role",
-                ),
+                "fields": ("role",),
             },
         ),
     )

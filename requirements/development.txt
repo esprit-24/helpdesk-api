@@ -1,8 +1,19 @@
+# Framework / application
 Django==5.2.6
 djangorestframework==3.16.1
 djangorestframework-simplejwt==5.5.1
 django-environ==0.12.0
-psycopg[binary]==3.3.4
 drf-spectacular==0.29.0
+
+# Database
+psycopg[binary]==3.3.4
+
+# Testing
 pytest==9.1.1
 pytest-django==4.12.0
+
+# Code quality
+black==26.5.1
+isort==8.0.1
+flake8==7.3.0
+bandit==1.9.4
