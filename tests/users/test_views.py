@@ -110,6 +110,27 @@ def test_user_can_retrieve_own_profile(requester):
 
 
 @pytest.mark.django_db
+def test_technician_can_retrieve_own_profile(technician):
+    # Arrange
+    client = APIClient()
+    client.force_authenticate(user=technician)
+
+    # Act
+    response = client.get(f"/api/users/{technician.id}/")
+
+    # Assert
+    assert response.status_code == 200
+    assert response.data == {
+        "id": technician.id,
+        "username": "technician",
+        "full_name": "",
+        "email": "",
+        "role": "TECHNICIAN",
+        "is_active": True,
+    }
+
+
+@pytest.mark.django_db
 def test_unauthenticated_user_cannot_retrieve_profile(requester):
     # Arrange
     client = APIClient()

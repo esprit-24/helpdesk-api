@@ -17,6 +17,7 @@ class User(AbstractUser):
         MANAGER = "MANAGER", "Manager"
         ADMIN = "ADMIN", "Administrator"
 
+    # New users are requesters by default.
     role = models.CharField(
         max_length=20,
         choices=Role.choices,
