@@ -895,139 +895,65 @@ Les commits doivent être :
 
 ---
 
-## Sprint 5 — Alignement fonctionnel GLPI
+## Sprint 5 — Procédures stockées PostgreSQL
 
-### US-501 — Référentiel fonctionnel GLPI
+### US-501 — Transactions et atomicité
 
-- [ ] Étudier le modèle fonctionnel HelpDesk de GLPI
-- [ ] Identifier les concepts métier de GLPI
-- [ ] Identifier les acteurs d'un ticket
-- [ ] Identifier le cycle de vie d'un ticket
-- [ ] Définir le périmètre fonctionnel retenu
-
-### US-502 — Alignement du modèle Ticket
-
-- [ ] Comparer le modèle `Ticket` avec le modèle GLPI
-- [ ] Clarifier le rôle de `requester`
-- [ ] Clarifier le rôle de `owner`
-- [ ] Revoir les statuts et le cycle de vie
-- [ ] Revoir les priorités et catégories
-- [ ] Définir les règles de fermeture et de résolution
-
-### US-503 — Alignement du modèle Assignment
-
-- [ ] Comparer les affectations avec le fonctionnement GLPI
-- [ ] Clarifier le rôle du technicien affecté
-- [ ] Clarifier le rôle de `assigned_by`
-- [ ] Définir le rôle de `assigned_at`
-- [ ] Définir le rôle de `ended_at`
-- [ ] Décider du maintien ou de la suppression de `is_primary`
-- [ ] Définir les règles de réaffectation
-
-### US-504 — Concepts HelpDesk complémentaires
-
-- [ ] Identifier les concepts GLPI pertinents manquants
-- [ ] Étudier les observateurs
-- [ ] Étudier les groupes d'affectation
-- [ ] Étudier les suivis
-- [ ] Étudier les tâches
-- [ ] Étudier les solutions
-- [ ] Intégrer uniquement les concepts retenus dans le périmètre du projet
-
-### US-505 — Contrat d'intégration GLPI
-
-- [ ] Identifier les ressources GLPI à intégrer
-- [ ] Définir le mapping entre notre domaine et GLPI
-- [ ] Définir les données échangées
-- [ ] Préparer une architecture d'intégration indépendante de l'API GLPI
-- [ ] Définir les principes de synchronisation
-
-### US-506 — Tests fonctionnels
-
-- [ ] Tester la création d'un ticket
-- [ ] Tester l'affectation d'un ticket
-- [ ] Tester la réaffectation
-- [ ] Tester les changements de statut
-- [ ] Tester la résolution
-- [ ] Tester la fermeture
-- [ ] Tester les règles de permissions
-- [ ] Valider le comportement fonctionnel retenu
-
-**État :** ⚪ À venir
-
----
-
-## Sprint 6 — PostgreSQL avancé
-
-### US-601 — Transactions
-
-- [ ] Comprendre les transactions PostgreSQL
+- [ ] Comprendre le principe d'une transaction
 - [ ] Comprendre ACID
-- [ ] Comprendre `COMMIT` et `ROLLBACK`
+- [ ] Comprendre l'atomicité
+- [ ] Comprendre `COMMIT`
+- [ ] Comprendre `ROLLBACK`
 - [ ] Comprendre les niveaux d'isolation
+- [ ] Identifier un cas métier nécessitant une transaction
 - [ ] Utiliser `transaction.atomic()` avec Django
-- [ ] Tester les scénarios de rollback
+- [ ] Tester les scénarios de succès et de rollback
 
-### US-602 — Index et optimisation des recherches
-
-- [ ] Comprendre les index PostgreSQL
-- [ ] Index simples
-- [ ] Index composites
-- [ ] Identifier les requêtes nécessitant des index
-- [ ] Évaluer l'impact des index
-
-### US-603 — Analyse des performances
-
-- [ ] Comprendre `EXPLAIN`
-- [ ] Comprendre `EXPLAIN ANALYZE`
-- [ ] Lire un plan d'exécution
-- [ ] Identifier les requêtes coûteuses
-- [ ] Comparer les performances avant/après optimisation
-
-### US-604 — Contraintes et intégrité
-
-- [ ] Approfondir les contraintes PostgreSQL
-- [ ] `PRIMARY KEY`
-- [ ] `FOREIGN KEY`
-- [ ] `UNIQUE`
-- [ ] `NOT NULL`
-- [ ] `CHECK`
-- [ ] Renforcer l'intégrité des données
-
-### US-605 — Fonctions et procédures stockées
+### US-502 — Fonctions PostgreSQL
 
 - [ ] Comprendre les fonctions PostgreSQL
-- [ ] Comprendre les procédures stockées
-- [ ] Paramètres et valeurs de retour
-- [ ] Appeler des fonctions/procédures depuis Django
-- [ ] Identifier les cas d'utilisation pertinents
-- [ ] Évaluer leurs limites
+- [ ] Comprendre les paramètres et valeurs de retour
+- [ ] Créer une fonction PostgreSQL
+- [ ] Tester une fonction
+- [ ] Appeler une fonction depuis Django
 
-### US-606 — Triggers et vues
+### US-503 — Procédures stockées
 
-- [ ] Comprendre les triggers PostgreSQL
-- [ ] Identifier les cas d'utilisation des triggers
-- [ ] Comprendre les vues SQL
-- [ ] Créer une vue
-- [ ] Exploiter une vue depuis Django
-- [ ] Évaluer les avantages et limites
+- [ ] Comprendre la différence entre fonction et procédure
+- [ ] Comprendre `CREATE PROCEDURE`
+- [ ] Déclarer des paramètres
+- [ ] Utiliser `CALL`
+- [ ] Créer une procédure stockée
+- [ ] Utiliser une procédure dans un cas métier du HelpDesk
+- [ ] Gérer les erreurs
+- [ ] Tester une procédure stockée
 
-### US-607 — Optimisation et validation
+### US-504 — Intégration avec Django
 
-- [ ] Analyser la base de données du projet
-- [ ] Identifier les optimisations pertinentes
-- [ ] Appliquer les optimisations retenues
-- [ ] Ajouter les tests nécessaires
-- [ ] Valider les performances
-- [ ] Documenter les choix techniques
+- [ ] Appeler une procédure PostgreSQL depuis Django
+- [ ] Utiliser le curseur Django pour exécuter du SQL
+- [ ] Gérer les paramètres
+- [ ] Récupérer les résultats
+- [ ] Gérer les exceptions PostgreSQL
+- [ ] Intégrer proprement les procédures dans la couche métier
+
+### US-505 — Cas métier du HelpDesk
+
+- [ ] Identifier un cas métier pertinent
+- [ ] Définir les règles métier
+- [ ] Implémenter la procédure stockée
+- [ ] L'appeler depuis Django
+- [ ] Garantir l'atomicité de l'opération
+- [ ] Ajouter les tests automatisés
+- [ ] Documenter le choix d'utiliser une procédure stockée
 
 **État :** ⚪ À venir
 
 ---
 
-## Sprint 7 — CI/CD & Industrialisation
+## Sprint 6 — CI/CD & Industrialisation
 
-### US-701 — CI avec GitHub Actions
+### US-601 — CI avec GitHub Actions
 
 - [ ] GitHub Actions
 - [ ] Exécution automatique des tests
@@ -1035,28 +961,28 @@ Les commits doivent être :
 - [ ] Exécution de pre-commit en CI
 - [ ] Validation des Pull Requests
 
-### US-702 — Image Docker de production
+### US-602 — Image Docker de production
 
 - [ ] Dockerfile de production
 - [ ] Optimisation de l'image
 - [ ] Séparation développement / production
 - [ ] Build de l'image de production
 
-### US-703 — Serveur d'application et reverse proxy
+### US-603 — Serveur d'application et reverse proxy
 
 - [ ] Gunicorn
 - [ ] Nginx
 - [ ] Configuration de production
 - [ ] Gestion des fichiers statiques
 
-### US-704 — Configuration et secrets
+### US-604 — Configuration et secrets
 
 - [ ] Gestion des variables d'environnement
 - [ ] Gestion des secrets
 - [ ] Séparation configuration développement / production
 - [ ] Sécurisation de la configuration
 
-### US-705 — Déploiement
+### US-605 — Déploiement
 
 - [ ] Préparer l'environnement de production
 - [ ] Déployer l'application
@@ -1067,24 +993,24 @@ Les commits doivent être :
 
 ---
 
-## Sprint 8 — Intégration GLPI
+## Sprint 7 — Intégration GLPI
 
-### US-801 — Configuration de GLPI
+### US-701 — Découverte de l'API GLPI
 
-- [ ] Préparer l'environnement GLPI
-- [ ] Configurer l'API GLPI
-- [ ] Configurer les accès API
-- [ ] Tester la communication avec GLPI
+- [ ] Comprendre l'API REST de GLPI
+- [ ] Identifier les ressources pertinentes
+- [ ] Comprendre l'authentification
+- [ ] Identifier les données à échanger
 
-### US-802 — Client REST GLPI
+### US-702 — Client GLPI
 
-- [ ] Créer le client HTTP GLPI
+- [ ] Créer un client REST GLPI
 - [ ] Gérer l'authentification
 - [ ] Gérer les requêtes API
 - [ ] Gérer les erreurs
 - [ ] Gérer les timeouts
 
-### US-803 — Synchronisation des tickets
+### US-703 — Synchronisation des tickets
 
 - [ ] Récupérer les tickets GLPI
 - [ ] Créer les tickets dans notre application
@@ -1092,14 +1018,14 @@ Les commits doivent être :
 - [ ] Synchroniser les statuts
 - [ ] Synchroniser les priorités et catégories
 
-### US-804 — Synchronisation des utilisateurs et acteurs
+### US-704 — Synchronisation des utilisateurs et affectations
 
 - [ ] Synchroniser les utilisateurs
 - [ ] Synchroniser les techniciens
 - [ ] Synchroniser les demandeurs
 - [ ] Synchroniser les affectations
 
-### US-805 — Synchronisation bidirectionnelle
+### US-705 — Gestion de la synchronisation
 
 - [ ] Définir le sens des synchronisations
 - [ ] Gérer les conflits
@@ -1107,7 +1033,7 @@ Les commits doivent être :
 - [ ] Garantir l'idempotence
 - [ ] Gérer les erreurs de synchronisation
 
-### US-806 — Tests d'intégration GLPI
+### US-706 — Tests d'intégration GLPI
 
 - [ ] Tests du client GLPI
 - [ ] Tests des synchronisations
@@ -1119,9 +1045,9 @@ Les commits doivent être :
 
 ---
 
-## Sprint 9 — Kubernetes
+## Sprint 8 — Kubernetes
 
-### US-901 — Découverte de Kubernetes
+### US-801 — Découverte de Kubernetes
 
 - [ ] Comprendre les concepts Kubernetes
 - [ ] Pods
@@ -1130,7 +1056,7 @@ Les commits doivent être :
 - [ ] ConfigMaps
 - [ ] Secrets
 
-### US-902 — Déploiement de l'application
+### US-802 — Déploiement de l'application
 
 - [ ] Conteneuriser l'application pour Kubernetes
 - [ ] Déployer Django
@@ -1139,7 +1065,7 @@ Les commits doivent être :
 - [ ] Configurer les variables et secrets
 - [ ] Health checks
 
-### US-903 — Exposition et scaling
+### US-803 — Exposition et scaling
 
 - [ ] Ingress
 - [ ] Exposition de l'API
