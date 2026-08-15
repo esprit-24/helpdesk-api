@@ -1,5 +1,6 @@
 import pytest
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 
 from apps.tickets.models import Assignment, Category, Priority, Status, Ticket
 
@@ -7,7 +8,6 @@ from apps.tickets.models import Assignment, Category, Priority, Status, Ticket
 @pytest.mark.django_db
 def test_status_string_representation(status):
     # Arrange
-    # status est fourni par la fixture.
 
     # Act
     result = str(status)
@@ -65,7 +65,6 @@ def test_priority_level_must_be_unique(priority):
 @pytest.mark.django_db
 def test_priority_string_representation(priority):
     # Arrange
-    # priority est fourni par la fixture.
 
     # Act
     result = str(priority)
@@ -77,7 +76,6 @@ def test_priority_string_representation(priority):
 @pytest.mark.django_db
 def test_category_string_representation(category):
     # Arrange
-    # category est fourni par la fixture.
 
     # Act
     result = str(category)
@@ -99,7 +97,6 @@ def test_category_name_must_be_unique(category):
 @pytest.mark.django_db
 def test_ticket_string_representation(ticket):
     # Arrange
-    # ticket est fourni par la fixture.
 
     # Act
     result = str(ticket)
@@ -111,7 +108,6 @@ def test_ticket_string_representation(ticket):
 @pytest.mark.django_db
 def test_ticket_owner_is_optional(ticket):
     # Arrange
-    # ticket est fourni sans owner.
 
     # Act
     owner = ticket.owner
@@ -123,7 +119,6 @@ def test_ticket_owner_is_optional(ticket):
 @pytest.mark.django_db
 def test_ticket_closed_at_is_optional(ticket):
     # Arrange
-    # ticket est fourni sans closed_at.
 
     # Act
     closed_at = ticket.closed_at
@@ -200,3 +195,27 @@ def test_assignment_is_not_primary_by_default(
 
     # Assert
     assert is_primary is False
+
+
+@pytest.mark.django_db
+def test_only_one_primary_assignment_is_allowed_per_ticket(
+    ticket,
+    technician,
+    manager,
+):
+    # Arrange
+    Assignment.objects.create(
+        ticket=ticket,
+        technician=technician,
+        assigned_by=manager,
+        is_primary=True,
+    )
+
+    # Act + Assert
+    with pytest.raises(IntegrityError):
+        Assignment.objects.create(
+            ticket=ticket,
+            technician=technician,
+            assigned_by=manager,
+            is_primary=True,
+        )

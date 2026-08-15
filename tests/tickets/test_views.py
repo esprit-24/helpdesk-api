@@ -3,11 +3,8 @@ from rest_framework.test import APIClient
 
 from apps.tickets.models import Assignment, Ticket
 
-# ============================================================
+
 # Status
-# ============================================================
-
-
 @pytest.mark.django_db
 def test_unauthenticated_user_cannot_list_statuses():
     # Arrange
@@ -163,11 +160,7 @@ def test_manager_cannot_delete_status(manager, status):
     assert response.status_code == 403
 
 
-# ============================================================
 # Priority
-# ============================================================
-
-
 @pytest.mark.django_db
 def test_unauthenticated_user_cannot_list_priorities():
     # Arrange
@@ -274,11 +267,7 @@ def test_manager_cannot_delete_priority(manager, priority):
     assert response.status_code == 403
 
 
-# ============================================================
 # Category
-# ============================================================
-
-
 @pytest.mark.django_db
 def test_unauthenticated_user_cannot_list_categories():
     # Arrange
@@ -382,11 +371,7 @@ def test_manager_cannot_delete_category(manager, category):
     assert response.status_code == 403
 
 
-# ============================================================
 # Ticket
-# ============================================================
-
-
 @pytest.mark.django_db
 def test_unauthenticated_user_cannot_list_tickets():
     # Arrange
@@ -626,11 +611,7 @@ def test_manager_cannot_delete_ticket(
     assert response.status_code == 403
 
 
-# ============================================================
 # Assignment
-# ============================================================
-
-
 @pytest.mark.django_db
 def test_unauthenticated_user_cannot_list_assignments():
     # Arrange

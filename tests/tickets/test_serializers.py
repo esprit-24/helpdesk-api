@@ -17,11 +17,8 @@ from apps.tickets.serializers import (
     TicketWriteSerializer,
 )
 
-# ============================================================
+
 # Status serializers
-# ============================================================
-
-
 @pytest.mark.django_db
 def test_status_summary_serializer(status):
     # Arrange
@@ -81,11 +78,7 @@ def test_status_serializer_accepts_valid_data():
     assert serializer.validated_data["is_final"] is True
 
 
-# ============================================================
 # Priority serializers
-# ============================================================
-
-
 @pytest.mark.django_db
 def test_priority_summary_serializer(priority):
     # Arrange
@@ -141,11 +134,7 @@ def test_priority_serializer_accepts_valid_data():
     assert serializer.validated_data["level"] == 2
 
 
-# ============================================================
 # Category serializers
-# ============================================================
-
-
 @pytest.mark.django_db
 def test_category_summary_serializer(category):
     # Arrange
@@ -198,11 +187,7 @@ def test_category_serializer_accepts_valid_data():
     assert serializer.validated_data["name"] == "Software"
 
 
-# ============================================================
 # Ticket summary serializer
-# ============================================================
-
-
 @pytest.mark.django_db
 def test_ticket_summary_serializer(ticket):
     # Arrange
@@ -223,11 +208,7 @@ def test_ticket_summary_serializer(ticket):
     }
 
 
-# ============================================================
 # Ticket read serializer
-# ============================================================
-
-
 @pytest.mark.django_db
 def test_ticket_read_serializer_without_owner(ticket):
     # Arrange
@@ -288,11 +269,7 @@ def test_ticket_read_serializer_with_owner(
     }
 
 
-# ============================================================
 # Ticket write serializer
-# ============================================================
-
-
 @pytest.mark.django_db
 def test_ticket_write_serializer_accepts_valid_data(
     status,
@@ -416,11 +393,7 @@ def test_ticket_write_serializer_rejects_missing_category(
     assert "category" in serializer.errors
 
 
-# ============================================================
 # Assignment read serializer
-# ============================================================
-
-
 @pytest.mark.django_db
 def test_assignment_read_serializer(assignment):
     # Arrange
@@ -458,11 +431,7 @@ def test_assignment_read_serializer(assignment):
     assert data["is_primary"] is False
 
 
-# ============================================================
 # Assignment write serializer
-# ============================================================
-
-
 @pytest.mark.django_db
 def test_assignment_write_serializer_accepts_valid_data(
     ticket,
@@ -573,3 +542,28 @@ def test_assignment_write_serializer_rejects_missing_technician(
     # Assert
     assert is_valid is False
     assert "technician" in serializer.errors
+
+
+@pytest.mark.django_db
+def test_assignment_write_serializer_rejects_non_technician_user(
+    ticket,
+    requester,
+):
+    # Arrange
+    data = {
+        "ticket": ticket.id,
+        "technician": requester.id,
+        "is_primary": False,
+    }
+
+    serializer = AssignmentWriteSerializer(data=data)
+
+    # Act
+    is_valid = serializer.is_valid()
+
+    # Assert
+    assert is_valid is False
+    assert "technician" in serializer.errors
+    assert serializer.errors["technician"][0] == (
+        "The assigned user must be a technician."
+    )
