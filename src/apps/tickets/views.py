@@ -25,12 +25,42 @@ from apps.tickets.serializers import (
 )
 from apps.users.models import User
 
-####################################################
+
+class ManagerAdminModelViewSet(viewsets.ModelViewSet):
+    """
+    Base ViewSet for resources managed by managers and administrators.
+    """
+
+    def get_permissions(self):
+        """
+        Return the permissions required for the current action.
+        """
+        if self.action in (
+            "create",
+            "update",
+            "partial_update",
+        ):
+            permission_classes = [
+                IsAuthenticated,
+                IsManagerOrAdmin,
+            ]
+
+        elif self.action == "destroy":
+            permission_classes = [
+                IsAuthenticated,
+                IsAdmin,
+            ]
+
+        else:
+            permission_classes = [
+                IsAuthenticated,
+            ]
+
+        return [permission() for permission in permission_classes]
+
+
 # Status ViewSet
-####################################################
-
-
-class StatusViewSet(viewsets.ModelViewSet):
+class StatusViewSet(ManagerAdminModelViewSet):
     """
     ViewSet for the Status model.
     """
@@ -38,40 +68,9 @@ class StatusViewSet(viewsets.ModelViewSet):
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
 
-    def get_permissions(self):
-        """
-        Return the permissions required for the current action.
-        """
-        if self.action in (
-            "create",
-            "update",
-            "partial_update",
-        ):
-            permission_classes = [
-                IsAuthenticated,
-                IsManagerOrAdmin,
-            ]
 
-        elif self.action == "destroy":
-            permission_classes = [
-                IsAuthenticated,
-                IsAdmin,
-            ]
-
-        else:
-            permission_classes = [
-                IsAuthenticated,
-            ]
-
-        return [permission() for permission in permission_classes]
-
-
-####################################################
 # Priority ViewSet
-####################################################
-
-
-class PriorityViewSet(viewsets.ModelViewSet):
+class PriorityViewSet(ManagerAdminModelViewSet):
     """
     ViewSet for the Priority model.
     """
@@ -79,40 +78,9 @@ class PriorityViewSet(viewsets.ModelViewSet):
     queryset = Priority.objects.all()
     serializer_class = PrioritySerializer
 
-    def get_permissions(self):
-        """
-        Return the permissions required for the current action.
-        """
-        if self.action in (
-            "create",
-            "update",
-            "partial_update",
-        ):
-            permission_classes = [
-                IsAuthenticated,
-                IsManagerOrAdmin,
-            ]
 
-        elif self.action == "destroy":
-            permission_classes = [
-                IsAuthenticated,
-                IsAdmin,
-            ]
-
-        else:
-            permission_classes = [
-                IsAuthenticated,
-            ]
-
-        return [permission() for permission in permission_classes]
-
-
-####################################################
 # Category ViewSet
-####################################################
-
-
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(ManagerAdminModelViewSet):
     """
     ViewSet for the Category model.
     """
@@ -120,39 +88,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
-    def get_permissions(self):
-        """
-        Return the permissions required for the current action.
-        """
-        if self.action in (
-            "create",
-            "update",
-            "partial_update",
-        ):
-            permission_classes = [
-                IsAuthenticated,
-                IsManagerOrAdmin,
-            ]
 
-        elif self.action == "destroy":
-            permission_classes = [
-                IsAuthenticated,
-                IsAdmin,
-            ]
-
-        else:
-            permission_classes = [
-                IsAuthenticated,
-            ]
-
-        return [permission() for permission in permission_classes]
-
-
-####################################################
 # Ticket ViewSet
-####################################################
-
-
 class TicketViewSet(viewsets.ModelViewSet):
     """
     ViewSet for the Ticket model.
@@ -237,11 +174,7 @@ class TicketViewSet(viewsets.ModelViewSet):
         )
 
 
-####################################################
 # Assignment ViewSet
-####################################################
-
-
 class AssignmentViewSet(viewsets.ModelViewSet):
     """
     ViewSet for the Assignment model.

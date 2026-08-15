@@ -1,6 +1,7 @@
 import pytest
 from rest_framework.test import APIRequestFactory
 
+from apps.users.models import User
 from apps.users.permissions import (
     IsManagerOrAdmin,
     IsSelfOrManagerOrAdmin,
@@ -142,10 +143,10 @@ def test_self_or_manager_or_admin_denies_other_requester(
     requester,
 ):
     # Arrange
-    other_user = type(requester).objects.create_user(
+    other_user = User.objects.create_user(
         username="other",
         password="testpassword",
-        role=type(requester).Role.REQUESTER,
+        role=User.Role.REQUESTER,
     )
 
     factory = APIRequestFactory()

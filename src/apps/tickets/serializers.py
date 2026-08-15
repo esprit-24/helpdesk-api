@@ -10,11 +10,8 @@ from apps.tickets.models import (
 from apps.users.models import User
 from apps.users.serializers import UserSummarySerializer
 
-####################################################
+
 # Status serializers
-####################################################
-
-
 class StatusSummarySerializer(serializers.ModelSerializer):
     """
     Serializer for displaying basic status information.
@@ -44,11 +41,7 @@ class StatusSerializer(serializers.ModelSerializer):
         )
 
 
-####################################################
 # Priority serializers
-####################################################
-
-
 class PrioritySummarySerializer(serializers.ModelSerializer):
     """
     Serializer for displaying basic priority information.
@@ -77,11 +70,7 @@ class PrioritySerializer(serializers.ModelSerializer):
         )
 
 
-####################################################
 # Category serializers
-####################################################
-
-
 class CategorySummarySerializer(serializers.ModelSerializer):
     """
     Serializer for displaying basic category information.
@@ -109,11 +98,7 @@ class CategorySerializer(serializers.ModelSerializer):
         )
 
 
-####################################################
 # Ticket serializers
-####################################################
-
-
 class TicketSummarySerializer(serializers.ModelSerializer):
     """
     Serializer for displaying basic ticket information.
@@ -194,11 +179,7 @@ class TicketWriteSerializer(serializers.ModelSerializer):
         )
 
 
-####################################################
 # Assignment serializers
-####################################################
-
-
 class AssignmentReadSerializer(serializers.ModelSerializer):
     """
     Serializer for reading assignment information.
@@ -249,3 +230,9 @@ class AssignmentWriteSerializer(serializers.ModelSerializer):
             "ended_at",
             "is_primary",
         )
+
+    def validate_technician(self, technician):
+        if technician.role != User.Role.TECHNICIAN:
+            raise serializers.ValidationError("The assigned user must be a technician.")
+
+        return technician

@@ -2,11 +2,8 @@ from rest_framework.permissions import BasePermission
 
 from apps.users.models import User
 
-####################################################
+
 # Role-based permissions
-####################################################
-
-
 class IsAdmin(BasePermission):
     """
     Permission allowing only administrators.
@@ -40,11 +37,7 @@ class IsManagerOrAdmin(BasePermission):
         )
 
 
-####################################################
 # Ticket permissions
-####################################################
-
-
 class CanViewTicket(BasePermission):
     """
     Permission allowing a user to view a ticket.
@@ -70,11 +63,7 @@ class CanViewTicket(BasePermission):
         ).exists()
 
 
-####################################################
 # Assignment permissions
-####################################################
-
-
 class CanViewAssignment(BasePermission):
     """
     Permission allowing a user to view an assignment.

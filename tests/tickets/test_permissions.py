@@ -10,6 +10,7 @@ from apps.tickets.permissions import (
 from apps.users.models import User
 
 
+# Role-based permissions
 @pytest.mark.django_db
 def test_admin_is_allowed(admin, request_factory):
     # Arrange
@@ -69,6 +70,7 @@ def test_requester_is_not_allowed_as_manager_or_admin(
     assert result is False
 
 
+# Ticket permissions
 @pytest.mark.django_db
 def test_manager_can_view_any_ticket(
     manager,
@@ -180,6 +182,7 @@ def test_technician_cannot_view_unassigned_ticket(
     assert result is False
 
 
+# Assignment permissions
 @pytest.mark.django_db
 def test_manager_can_view_any_assignment(
     manager,

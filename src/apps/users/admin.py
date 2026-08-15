@@ -7,7 +7,7 @@ from .models import User
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     """
-    Administration du modèle utilisateur personnalisé.
+    Admin configuration for the custom user model.
     """
 
     list_display = (

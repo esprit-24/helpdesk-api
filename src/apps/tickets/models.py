@@ -215,5 +215,13 @@ class Assignment(models.Model):
         verbose_name = "Assignment"
         verbose_name_plural = "Assignments"
 
+        constraints = [
+            models.UniqueConstraint(
+                fields=["ticket"],
+                condition=models.Q(is_primary=True),
+                name="unique_primary_assignment_per_ticket",
+            ),
+        ]
+
     def __str__(self):
         return f"{self.ticket} → {self.technician}"
