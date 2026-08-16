@@ -1059,41 +1059,90 @@ Les éléments non cochés correspondent à des étapes futures d'apprentissage 
 
 ## Sprint 5 — CI/CD & Industrialisation
 
-### US-501 — CI avec GitHub Actions
+Objectif : comprendre et mettre en place progressivement une chaîne d'industrialisation pour l'application HelpDesk API.
 
-- [ ] GitHub Actions
-- [ ] Exécution automatique des tests
-- [ ] Contrôles de qualité
-- [ ] Exécution de pre-commit en CI
-- [ ] Validation des Pull Requests
+Ce sprint ne se limite pas à écrire un fichier de pipeline. Il doit permettre de comprendre les concepts, les outils et le workflow complet allant du code jusqu'à une application vérifiée après déploiement.
 
-### US-502 — Image Docker de production
+### US-501 — Comprendre CI/CD
 
-- [ ] Dockerfile de production
-- [ ] Optimisation de l'image
-- [ ] Séparation développement / production
-- [ ] Build de l'image de production
+- [ ] Comprendre l'intégration continue
+- [ ] Comprendre la livraison continue
+- [ ] Comprendre le déploiement continu
+- [ ] Comprendre les notions de pipeline, job, stage, runner et agent
+- [ ] Comprendre les artefacts
+- [ ] Comprendre les environnements
+- [ ] Comprendre les secrets et credentials
+- [ ] Comprendre les déclencheurs de pipeline
 
-### US-503 — Serveur d'application et reverse proxy
+### US-502 — Jenkins
 
-- [ ] Gunicorn
-- [ ] Nginx
-- [ ] Configuration de production
-- [ ] Gestion des fichiers statiques
+- [ ] Comprendre l'architecture Jenkins
+- [ ] Comprendre controller et agent
+- [ ] Installer Jenkins
+- [ ] Configurer Jenkins
+- [ ] Gérer les credentials
+- [ ] Créer un premier job
+- [ ] Créer une pipeline
+- [ ] Comprendre le Jenkinsfile
+- [ ] Lire et diagnostiquer les logs Jenkins
 
-### US-504 — Configuration et secrets
+### US-503 — Pipeline CI HelpDesk API
 
-- [ ] Gestion des variables d'environnement
-- [ ] Gestion des secrets
-- [ ] Séparation développement / production
-- [ ] Sécurisation de la configuration
+- [ ] Checkout du code
+- [ ] Installation des dépendances
+- [ ] Exécution des tests Pytest
+- [ ] Exécution de Black
+- [ ] Exécution de isort
+- [ ] Exécution de Flake8
+- [ ] Exécution de Bandit
+- [ ] Build de l'image Docker
+- [ ] Comprendre l'intégration de la CI dans un workflow de Pull Request
 
-### US-505 — Déploiement
+### US-504 — GitHub Actions
 
-- [ ] Préparer l'environnement de production
+- [ ] Comprendre GitHub Actions
+- [ ] Comprendre workflow, job, step et runner
+- [ ] Comparer GitHub Actions avec Jenkins
+- [ ] Comprendre les limites liées aux quotas et à la facturation
+- [ ] Créer un exemple simple sans rendre le projet dépendant d'un abonnement payant
+
+### US-505 — Image Docker de production
+
+- [ ] Comprendre la différence entre image de développement et image de production
+- [ ] Créer un Dockerfile de production
+- [ ] Optimiser l'image
+- [ ] Configurer un utilisateur non-root
+- [ ] Séparer la configuration de développement et de production
+
+### US-506 — Gunicorn
+
+- [ ] Comprendre pourquoi `runserver` n'est pas utilisé en production
+- [ ] Installer et configurer Gunicorn
+- [ ] Lancer Django avec Gunicorn
+- [ ] Comprendre le rôle du serveur d'application
+
+### US-507 — Nginx
+
+- [ ] Comprendre le rôle d'un reverse proxy
+- [ ] Configurer Nginx devant Gunicorn
+- [ ] Gérer les fichiers statiques
+- [ ] Comprendre le flux Internet → Nginx → Gunicorn → Django → PostgreSQL
+
+### US-508 — Configuration et secrets de production
+
+- [ ] Séparer les environnements dev, test et prod
+- [ ] Gérer les variables d'environnement
+- [ ] Gérer les secrets
+- [ ] Éviter l'exposition de secrets dans le dépôt
+- [ ] Vérifier la configuration Django pour la production
+
+### US-509 — Déploiement
+
+- [ ] Préparer un environnement de déploiement
 - [ ] Déployer l'application
-- [ ] Vérifier l'application en production
-- [ ] Documenter le processus de déploiement
+- [ ] Vérifier l'application après déploiement
+- [ ] Documenter le processus
+- [ ] Comprendre le workflow Git push → CI → tests → qualité → build Docker → déploiement → vérification
 
 **État :** ⚪ À venir
 
@@ -1245,15 +1294,15 @@ Les éléments non cochés correspondent à des étapes futures d'apprentissage 
 # État global
 
 ```text
-Sprint 1 — Infrastructure       ✅ Terminé
-Sprint 2 — Domaine métier       ✅ Terminé
-Sprint 3 — API REST             ✅ Terminé
-Sprint 4 — Qualité & tests      ✅ Terminé
+Sprint 1 — Infrastructure                     ✅ Terminé
+Sprint 2 — Domaine métier                     ✅ Terminé
+Sprint 3 — API REST                           ✅ Terminé
+Sprint 4 — Qualité & tests                    ✅ Terminé
 
-Sprint 5 — PostgreSQL avancé    ⚪ À venir
-Sprint 6 — CI/CD                ⚪ À venir
-Sprint 7 — Intégration GLPI     ⚪ À venir
-Sprint 8 — Kubernetes           ⚪ À venir
+Sprint 5 — CI/CD & Industrialisation          ⚪ À venir
+Sprint 6 — Intégration GLPI                   ⚪ À venir
+Sprint 7 — PostgreSQL avancé & SQL procédural ⚪ À venir
+Sprint 8 — Kubernetes                         ⚪ À venir
 ```
 
 Le projet évolue progressivement : chaque sprint ajoute une nouvelle compétence technique ou une nouvelle dimension d'industrialisation sans anticiper les étapes qui n'ont pas encore été étudiées.
