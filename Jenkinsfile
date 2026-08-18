@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     stages {
-        stage('CI') {
+        stage('Build') {
             steps {
-                echo 'Jenkins CI is running'
+                sh 'docker compose -f compose.yaml -f compose.ci.yaml build web'
             }
         }
     }
