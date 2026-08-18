@@ -104,11 +104,21 @@ L'approfondissement de **PostgreSQL et SQL avancé** constitue une étape ultér
 - ✅ Bandit
 - ✅ pre-commit
 
-Dernière validation :
+## CI/CD et industrialisation
 
-```text
-120 passed in 23.05s
-```
+- ✅ Jenkins
+- ✅ Jenkinsfile
+- ✅ Pipeline CI
+- ✅ Build Docker dédié à la CI
+- ✅ Environnement CI dédié
+- ✅ Exécution automatique des tests avec Pytest
+- ✅ Vérification de la qualité du code
+- ✅ Analyse de sécurité avec Bandit
+- ✅ Gestion des secrets CI avec Jenkins Credentials
+- ✅ Nettoyage de l'environnement CI
+- ✅ Jenkins Multibranch Pipeline
+- ✅ Détection des branches Git
+- ✅ Détection des Pull Requests
 
 ---
 
@@ -118,9 +128,12 @@ Dernière validation :
 helpdesk-api/
 │
 ├── docker/
-│   └── Dockerfile
+│   ├── Dockerfile
+│   └── Dockerfile.ci
 │
 ├── requirements/
+│   ├── base.txt
+│   ├── ci.txt
 │   └── development.txt
 │
 ├── src/
@@ -179,9 +192,10 @@ helpdesk-api/
 ├── .pre-commit-config.yaml
 ├── .flake8
 ├── compose.yaml
+├── compose.ci.yaml
+├── Jenkinsfile
 ├── pyproject.toml
 ├── pytest.ini
-├── requirements/
 └── README.md
 ```
 
@@ -218,6 +232,36 @@ Tests organisés par application et par responsabilité :
 - serializers ;
 - permissions ;
 - ViewSets.
+
+### `Docker/`
+
+Contient les Dockerfiles utilisés pour les différents environnements :
+
+- Dockerfile : image de développement ;
+- Dockerfile.ci : image utilisée pour la CI Jenkins.
+
+### `requirements/`
+
+Les dépendances Python sont séparées par environnement :
+
+- base.txt : dépendances communes ;
+- development.txt : dépendances nécessaires au développement ;
+- ci.txt : dépendances nécessaires à l'exécution de la CI.
+
+### `Jenkinsfile`
+
+Définit le pipeline CI Jenkins du projet.
+
+Le pipeline réalise notamment :
+
+- le build de l'image Docker CI ;
+- l'exécution des tests ;
+- les contrôles de qualité ;
+- l'analyse de sécurité.
+
+### `compose.ci.yaml`
+
+Définit les adaptations Docker Compose utilisées pour l'environnement CI.
 
 ---
 
@@ -258,6 +302,13 @@ Tests organisés par application et par responsabilité :
 - Bandit 1.9.4
 - pre-commit 4.6.1
 
+## CI/CD et industrialisation
+
+- Jenkins
+- Jenkinsfile
+- Jenkins Multibranch Pipeline
+- Docker Compose pour l'environnement CI
+
 ## Versionnement
 
 - Git
@@ -267,7 +318,9 @@ Tests organisés par application et par responsabilité :
 
 # Prérequis
 
-Avant de lancer le projet, installer :
+## Développement local
+
+Avant de lancer le projet localement, installer :
 
 - Git ;
 - Docker Desktop ;
@@ -276,6 +329,16 @@ Avant de lancer le projet, installer :
 L'application Django et les principaux outils de développement sont exécutés dans Docker.
 
 Un environnement virtuel Python local `.venv` est utilisé pour les outils Git, notamment `pre-commit`.
+
+## CI/CD
+
+L'exécution de la CI nécessite :
+
+- Jenkins ;
+- Docker ;
+- Docker Compose ;
+- un accès au dépôt GitHub ;
+- des credentials Jenkins pour fournir l'environnement CI sans versionner les secrets.
 
 ---
 
@@ -399,6 +462,22 @@ Optionnel :
 ```bash
 docker compose exec web python src/manage.py createsuperuser
 ```
+
+## 9. CI Jenkins
+
+La CI est exécutée automatiquement par Jenkins à partir du `Jenkinsfile` présent dans le dépôt.
+
+Le pipeline CI :
+
+1. construit l'image Docker dédiée à la CI ;
+2. démarre les services nécessaires ;
+3. exécute les tests Pytest ;
+4. vérifie la qualité du code avec Black, isort et Flake8 ;
+5. analyse le code avec Bandit ;
+6. nettoie l'environnement CI après l'exécution.
+
+L'environnement CI utilise un fichier `.env.ci` fourni temporairement par Jenkins Credentials.
+Ce fichier n'est pas versionné dans Git.
 
 ---
 
@@ -802,10 +881,27 @@ Workflow recommandé :
 6. Faire un commit atomique.
 7. Pousser la branche sur GitHub.
 8. Ouvrir une Pull Request.
-9. Effectuer la revue de code.
-10. Fusionner dans `main`.
-11. Mettre à jour la branche `main`.
-12. Supprimer les branches devenues inutiles.
+9. Jenkins détecte la Pull Request et exécute automatiquement la CI.
+10. Vérifier le résultat de la CI.
+11. Effectuer la revue de code.
+12. Fusionner dans `main`.
+13. Mettre à jour la branche `main`.
+14. Supprimer les branches devenues inutiles.
+
+## CI lors d'une Pull Request
+
+Lorsqu'une Pull Request est créée ou mise à jour, Jenkins utilise le Multibranch Pipeline pour détecter la Pull Request et exécuter le `Jenkinsfile`.
+
+La CI vérifie notamment :
+
+- le build de l'image Docker CI ;
+- les tests Pytest ;
+- Black ;
+- isort ;
+- Flake8 ;
+- Bandit.
+
+La Pull Request peut ensuite être revue et fusionnée lorsque les vérifications nécessaires sont satisfaisantes.
 
 Exemple :
 
@@ -1063,40 +1159,46 @@ Objectif : comprendre et mettre en place progressivement une chaîne d'industria
 
 Ce sprint ne se limite pas à écrire un fichier de pipeline. Il doit permettre de comprendre les concepts, les outils et le workflow complet allant du code jusqu'à une application vérifiée après déploiement.
 
-### US-501 — Comprendre CI/CD
+### ✅ US-501 — Comprendre CI/CD
 
-- [ ] Comprendre l'intégration continue
+- [x] Comprendre l'intégration continue
 - [ ] Comprendre la livraison continue
 - [ ] Comprendre le déploiement continu
-- [ ] Comprendre les notions de pipeline, job, stage, runner et agent
+- [x] Comprendre les notions de pipeline, job, stage, runner et agent
 - [ ] Comprendre les artefacts
-- [ ] Comprendre les environnements
-- [ ] Comprendre les secrets et credentials
+- [x] Comprendre les environnements
+- [x] Comprendre les secrets et credentials
 - [ ] Comprendre les déclencheurs de pipeline
 
-### US-502 — Jenkins
+### ✅ US-502 — Jenkins
 
-- [ ] Comprendre l'architecture Jenkins
+- [x] Comprendre l'architecture Jenkins
 - [ ] Comprendre controller et agent
-- [ ] Installer Jenkins
-- [ ] Configurer Jenkins
-- [ ] Gérer les credentials
-- [ ] Créer un premier job
-- [ ] Créer une pipeline
-- [ ] Comprendre le Jenkinsfile
-- [ ] Lire et diagnostiquer les logs Jenkins
+- [x] Installer Jenkins
+- [x] Configurer Jenkins
+- [x] Gérer les credentials
+- [x] Créer un premier job
+- [x] Créer une pipeline
+- [x] Comprendre le Jenkinsfile
+- [x] Lire et diagnostiquer les logs Jenkins
+- [x] Configurer un Multibranch Pipeline
+- [x] Découvrir les branches Git avec Jenkins
+- [x] Découvrir les Pull Requests avec Jenkins
 
-### US-503 — Pipeline CI HelpDesk API
+### ✅ US-503 — Pipeline CI HelpDesk API
 
-- [ ] Checkout du code
-- [ ] Installation des dépendances
-- [ ] Exécution des tests Pytest
-- [ ] Exécution de Black
-- [ ] Exécution de isort
-- [ ] Exécution de Flake8
-- [ ] Exécution de Bandit
-- [ ] Build de l'image Docker
-- [ ] Comprendre l'intégration de la CI dans un workflow de Pull Request
+- [x] Checkout du code
+- [x] Installation des dépendances
+- [x] Exécution des tests Pytest
+- [x] Exécution de Black
+- [x] Exécution de isort
+- [x] Exécution de Flake8
+- [x] Exécution de Bandit
+- [x] Build de l'image Docker
+- [x] Gestion de l'environnement CI
+- [x] Gestion des secrets CI avec Jenkins Credentials
+- [x] Nettoyage de l'environnement CI
+- [x] Comprendre l'intégration de la CI dans un workflow de Pull Request
 
 ### US-504 — GitHub Actions
 
@@ -1144,7 +1246,7 @@ Ce sprint ne se limite pas à écrire un fichier de pipeline. Il doit permettre 
 - [ ] Documenter le processus
 - [ ] Comprendre le workflow Git push → CI → tests → qualité → build Docker → déploiement → vérification
 
-**État :** ⚪ À venir
+**État :** 🟡 En cours
 
 ---
 
@@ -1299,7 +1401,8 @@ Sprint 2 — Domaine métier                     ✅ Terminé
 Sprint 3 — API REST                           ✅ Terminé
 Sprint 4 — Qualité & tests                    ✅ Terminé
 
-Sprint 5 — CI/CD & Industrialisation          ⚪ À venir
+Sprint 5 — CI/CD & Industrialisation          🟡 En cours
+
 Sprint 6 — Intégration GLPI                   ⚪ À venir
 Sprint 7 — PostgreSQL avancé & SQL procédural ⚪ À venir
 Sprint 8 — Kubernetes                         ⚪ À venir
