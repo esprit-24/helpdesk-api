@@ -14,7 +14,6 @@ pipeline {
                     sh '''
                         cp "$ENV_FILE" .env.ci
                         docker compose -f compose.yaml -f compose.ci.yaml run --rm web pytest
-                        rm -f .env.ci
                     '''
                 }
             }
@@ -36,6 +35,12 @@ pipeline {
                         bandit -r . -ll
                 '''
             }
+        }
+    }
+
+    post {
+        always {
+            sh 'rm -f .env.ci'
         }
     }
 }
