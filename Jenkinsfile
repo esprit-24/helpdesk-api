@@ -19,5 +19,14 @@ pipeline {
                 }
             }
         }
+
+        stage('Quality') {
+            steps {
+                sh '''
+                    docker compose -f compose.yaml -f compose.ci.yaml run --rm quality \
+                        sh -c "black --check . && isort --check-only . && flake8 ."
+                '''
+            }
+        }
     }
 }
