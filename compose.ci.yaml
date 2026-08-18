@@ -1,0 +1,29 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.ci
+
+    image: helpdesk-api:ci
+
+    env_file: !override
+      - .env.ci
+
+    ports: !reset []
+
+    volumes: !reset []
+
+  db:
+    env_file: !override
+      - .env.ci
+
+    ports: !reset []
+
+    volumes: !reset []
+
+  quality:
+    image: helpdesk-api:ci
+
+  security:
+    image: helpdesk-api:ci
+    
