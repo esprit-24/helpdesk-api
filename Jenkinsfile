@@ -28,5 +28,14 @@ pipeline {
                 '''
             }
         }
+
+        stage('Security') {
+            steps {
+                sh '''
+                    docker compose -f compose.yaml -f compose.ci.yaml run --rm security \
+                        bandit -r . -ll
+                '''
+            }
+        }
     }
 }
