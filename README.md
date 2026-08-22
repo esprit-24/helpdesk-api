@@ -1,6 +1,6 @@
 # HelpDesk API
 
-Backend REST développé avec **Django** et **Django REST Framework** pour gérer un système de support informatique inspiré de **GLPI**.
+API REST Backend développée avec **Django** et **Django REST Framework** pour gérer un système de support informatique inspiré de **GLPI**.
 
 Le projet est réalisé dans un objectif d'apprentissage afin de mettre en pratique les bonnes pratiques de développement Backend utilisées dans les équipes professionnelles.
 
@@ -23,17 +23,32 @@ L'objectif n'est pas uniquement de construire une API fonctionnelle, mais égale
 Le projet a pour objectifs de :
 
 - comprendre l'architecture d'une application Django professionnelle ;
+
 - maîtriser Django et Django REST Framework ;
-- concevoir une API REST robuste et maintenable ;
+
+- concevoir une API REST robuste, sécurisée et maintenable ;
+
 - utiliser PostgreSQL comme base de données relationnelle ;
+
 - conteneuriser l'application avec Docker et Docker Compose ;
+
 - mettre en place une stratégie de tests automatisés ;
+
 - appliquer des outils de qualité et de sécurité du code ;
-- comprendre les permissions et règles métier ;
-- documenter une API REST avec OpenAPI ;
+
+- comprendre et implémenter les permissions ainsi que les règles métier ;
+
+- documenter l'API REST avec OpenAPI ;
+
+- mettre en place un workflow professionnel avec Git, branches de fonctionnalités, Pull Requests et revue de code ;
+
+- construire une chaîne d'intégration continue et de déploiement avec Jenkins ;
+
+- automatiser progressivement les vérifications et les étapes du cycle de développement ;
+
 - construire progressivement une architecture exploitable dans un contexte professionnel.
 
-L'approfondissement de **PostgreSQL et SQL avancé** constitue une étape ultérieure de la roadmap. Il ne fait pas encore partie des travaux réalisés.
+L'approfondissement de **PostgreSQL et du SQL avancé** constitue une étape ultérieure de la roadmap. Il ne fait pas encore partie des travaux réalisés.
 
 ---
 
@@ -96,8 +111,8 @@ L'approfondissement de **PostgreSQL et SQL avancé** constitue une étape ultér
 - ✅ Fixtures Pytest
 - ✅ `conftest.py`
 - ✅ Tests d'intégration de l'API
-- ✅ **120 tests automatisés**
-- ✅ **120 tests passent**
+- ✅ 120 tests automatisés actuellement
+- ✅ 120 tests passent lors du dernier pipeline CI
 - ✅ Black
 - ✅ isort
 - ✅ Flake8
@@ -111,14 +126,17 @@ L'approfondissement de **PostgreSQL et SQL avancé** constitue une étape ultér
 - ✅ Pipeline CI
 - ✅ Build Docker dédié à la CI
 - ✅ Environnement CI dédié
-- ✅ Exécution automatique des tests avec Pytest
+- ✅ Exécution des tests avec Pytest dans le pipeline
 - ✅ Vérification de la qualité du code
 - ✅ Analyse de sécurité avec Bandit
 - ✅ Gestion des secrets CI avec Jenkins Credentials
 - ✅ Nettoyage de l'environnement CI
 - ✅ Jenkins Multibranch Pipeline
 - ✅ Détection des branches Git
-- ✅ Détection des Pull Requests
+- 🔄 Déclenchement automatique du pipeline via GitHub Webhook
+- 🔄 Détection et traitement des Pull Requests
+- 🔄 Intégration GitHub Webhook → Jenkins
+- 🔄 Exposition locale de Jenkins via ngrok pour les webhooks
 
 ---
 
@@ -191,77 +209,24 @@ helpdesk-api/
 ├── .gitignore
 ├── .pre-commit-config.yaml
 ├── .flake8
-├── compose.yaml
 ├── compose.ci.yaml
+├── compose.yaml
 ├── Jenkinsfile
 ├── pyproject.toml
 ├── pytest.ini
 └── README.md
 ```
 
-## Organisation
+Le projet suit une organisation séparant le code applicatif, la configuration, les tests et les éléments d'infrastructure.
 
-### `src/apps/users/`
-
-Responsable des utilisateurs, rôles, permissions et authentification.
-
-### `src/apps/tickets/`
-
-Responsable du domaine HelpDesk :
-
-- statuts ;
-- priorités ;
-- catégories ;
-- tickets ;
-- affectations.
-
-### `src/config/`
-
-Configuration globale du projet Django :
-
-- settings ;
-- routes principales ;
-- authentification JWT ;
-- documentation OpenAPI.
-
-### `tests/`
-
-Tests organisés par application et par responsabilité :
-
-- modèles ;
-- serializers ;
-- permissions ;
-- ViewSets.
-
-### `Docker/`
-
-Contient les Dockerfiles utilisés pour les différents environnements :
-
-- Dockerfile : image de développement ;
-- Dockerfile.ci : image utilisée pour la CI Jenkins.
-
-### `requirements/`
-
-Les dépendances Python sont séparées par environnement :
-
-- base.txt : dépendances communes ;
-- development.txt : dépendances nécessaires au développement ;
-- ci.txt : dépendances nécessaires à l'exécution de la CI.
-
-### `Jenkinsfile`
-
-Définit le pipeline CI Jenkins du projet.
-
-Le pipeline réalise notamment :
-
-- le build de l'image Docker CI ;
-- l'exécution des tests ;
-- les contrôles de qualité ;
-- l'analyse de sécurité.
-
-### `compose.ci.yaml`
-
-Définit les adaptations Docker Compose utilisées pour l'environnement CI.
+- `src/apps/users/` : gestion des utilisateurs, rôles, permissions et authentification.
+- `src/apps/tickets/` : domaine métier du HelpDesk, notamment les tickets, statuts, priorités, catégories et affectations.
+- `src/config/` : configuration globale du projet Django.
+- `tests/` : tests organisés par application et par responsabilité.
+- `docker/` : Dockerfiles utilisés pour les différents environnements.
+- `requirements/` : dépendances Python séparées par environnement.
+- `Jenkinsfile` : définition du pipeline CI Jenkins.
+- `compose.ci.yaml` : configuration Docker Compose spécifique à l'environnement CI.
 
 ---
 
@@ -280,9 +245,6 @@ Définit les adaptations Docker Compose utilisées pour l'environnement CI.
 
 - PostgreSQL 17
 - psycopg 3.3.4
-
-> PostgreSQL est déjà utilisé par l'application.
-> L'approfondissement de PostgreSQL et SQL avancé sera réalisé dans un sprint ultérieur.
 
 ## Conteneurisation
 
@@ -304,10 +266,12 @@ Définit les adaptations Docker Compose utilisées pour l'environnement CI.
 
 ## CI/CD et industrialisation
 
-- Jenkins
+- Jenkins 2.575 (JDK 21)
 - Jenkinsfile
 - Jenkins Multibranch Pipeline
-- Docker Compose pour l'environnement CI
+- Docker Compose 5.3.1 pour l'environnement CI
+- GitHub Webhooks
+- ngrok 3.39.10 pour l'exposition locale de Jenkins
 
 ## Versionnement
 
@@ -332,13 +296,15 @@ Un environnement virtuel Python local `.venv` est utilisé pour les outils Git, 
 
 ## CI/CD
 
-L'exécution de la CI nécessite :
+Pour reproduire l'environnement CI, une infrastructure Jenkins est nécessaire avec :
 
 - Jenkins ;
 - Docker ;
 - Docker Compose ;
 - un accès au dépôt GitHub ;
 - des credentials Jenkins pour fournir l'environnement CI sans versionner les secrets.
+
+La configuration de Jenkins est externe au projet et n'est pas nécessaire pour exécuter l'application en développement local.
 
 ---
 
@@ -465,9 +431,9 @@ docker compose exec web python src/manage.py createsuperuser
 
 ## 9. CI Jenkins
 
-La CI est exécutée automatiquement par Jenkins à partir du `Jenkinsfile` présent dans le dépôt.
+Le projet fournit un `Jenkinsfile` qui définit le pipeline CI.
 
-Le pipeline CI :
+Le pipeline réalise notamment les étapes suivantes :
 
 1. construit l'image Docker dédiée à la CI ;
 2. démarre les services nécessaires ;
@@ -477,7 +443,10 @@ Le pipeline CI :
 6. nettoie l'environnement CI après l'exécution.
 
 L'environnement CI utilise un fichier `.env.ci` fourni temporairement par Jenkins Credentials.
+
 Ce fichier n'est pas versionné dans Git.
+
+L'infrastructure Jenkins est indépendante du projet et peut être configurée dans un environnement dédié. Elle n'est pas nécessaire pour exécuter l'application en développement local.
 
 ---
 
@@ -513,6 +482,16 @@ docker compose exec web pytest tests/tickets/
 docker compose exec web python src/manage.py check
 ```
 
+## Tests dans la CI
+
+La même suite de tests est exécutée automatiquement par le pipeline CI Jenkins :
+
+```bash
+docker compose -f compose.yaml -f compose.ci.yaml run --rm web pytest
+```
+
+Les tests doivent réussir avant que le pipeline puisse être considéré comme valide.
+
 ---
 
 # Qualité du code
@@ -532,7 +511,7 @@ Exécuter tous les hooks manuellement :
 .venv\Scripts\pre-commit.exe run --all-files
 ```
 
-Le commit n'est accepté que si les hooks passent correctement.
+Les hooks sont exécutés automatiquement lors des commits. Si un hook échoue, le commit est interrompu jusqu'à ce que le problème soit corrigé.
 
 ---
 
@@ -580,9 +559,9 @@ POST /api/token/refresh/
 
 ---
 
-# Ressources API
+## Ressources API
 
-## Users
+### Users
 
 ```text
 /api/users/
@@ -590,7 +569,7 @@ POST /api/token/refresh/
 
 Gestion de la consultation des utilisateurs selon les permissions et rôles.
 
-## Statuses
+### Statuses
 
 ```text
 /api/statuses/
@@ -598,7 +577,7 @@ Gestion de la consultation des utilisateurs selon les permissions et rôles.
 
 Gestion des statuts des tickets.
 
-## Priorities
+### Priorities
 
 ```text
 /api/priorities/
@@ -606,7 +585,7 @@ Gestion des statuts des tickets.
 
 Gestion des priorités.
 
-## Categories
+### Categories
 
 ```text
 /api/categories/
@@ -614,7 +593,7 @@ Gestion des priorités.
 
 Gestion des catégories.
 
-## Tickets
+### Tickets
 
 ```text
 /api/tickets/
@@ -622,7 +601,7 @@ Gestion des catégories.
 
 Gestion des tickets.
 
-## Assignments
+### Assignments
 
 ```text
 /api/assignments/
@@ -643,7 +622,7 @@ Le modèle utilisateur définit quatre rôles métier :
 | `MANAGER` | Accès élargi aux ressources métier |
 | `ADMIN` | Accès administrateur |
 
-Les permissions sont appliquées au niveau des endpoints et des objets.
+Les permissions sont appliquées au niveau des endpoints et des objets afin de contrôler l'accès aux ressources selon le rôle de l'utilisateur.
 
 ---
 
@@ -696,6 +675,8 @@ Elle permet notamment de gérer :
 - tickets ;
 - affectations.
 
+L'accès à l'interface nécessite un compte disposant des droits d'administration.
+
 ---
 
 # Documentation de l'API
@@ -705,24 +686,29 @@ Elle permet notamment de gérer :
 ```text
 http://localhost:8000/api/docs/
 ```
+Swagger UI permet d'explorer et de tester les endpoints de l'API directement depuis le navigateur.
 
 ## ReDoc
 
 ```text
 http://localhost:8000/api/redoc/
 ```
+ReDoc fournit une présentation structurée de la documentation OpenAPI.
 
 ## Schéma OpenAPI
 
 ```text
 http://localhost:8000/api/schema/
 ```
+Cette route expose le schéma OpenAPI de l'API.
 
 ---
 
 # Variables d'environnement
 
-Le fichier `.env.example` sert de modèle.
+Le fichier `.env.example` sert de modèle pour créer le fichier `.env`.
+
+Le fichier `.env` contient les valeurs spécifiques à l'environnement et ne doit jamais être versionné.
 
 Exemple :
 
@@ -748,7 +734,7 @@ Une clé secrète Django peut être générée avec :
 docker compose exec web python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 
-Puis renseigner :
+Puis renseigner la valeur générée dans `.env` :
 
 ```env
 DJANGO_SECRET_KEY=<clé_générée>
@@ -762,107 +748,6 @@ Exemple :
 
 ```env
 DEFAULT_USER_PASSWORD=change_me
-```
-
-> Ne jamais versionner `.env`.
-> Le fichier `.env.example` est destiné à servir de modèle.
-
----
-
-# Commandes de développement
-
-## Docker
-
-Construire et démarrer :
-
-```bash
-docker compose up --build -d
-```
-
-Démarrer sans reconstruire :
-
-```bash
-docker compose up -d
-```
-
-Arrêter :
-
-```bash
-docker compose down
-```
-
-Arrêter et supprimer les volumes :
-
-```bash
-docker compose down -v
-```
-
-Afficher les conteneurs :
-
-```bash
-docker compose ps
-```
-
-Afficher les logs :
-
-```bash
-docker compose logs web
-```
-
-Ouvrir un terminal dans le conteneur :
-
-```bash
-docker compose exec web bash
-```
-
-## Django
-
-Vérifier la configuration :
-
-```bash
-docker compose exec web python src/manage.py check
-```
-
-Créer des migrations :
-
-```bash
-docker compose exec web python src/manage.py makemigrations
-```
-
-Appliquer les migrations :
-
-```bash
-docker compose exec web python src/manage.py migrate
-```
-
-Afficher les migrations :
-
-```bash
-docker compose exec web python src/manage.py showmigrations
-```
-
-Créer un superutilisateur :
-
-```bash
-docker compose exec web python src/manage.py createsuperuser
-```
-
-Seed utilisateurs :
-
-```bash
-docker compose exec web python src/manage.py seed_users
-```
-
-Seed données de référence :
-
-```bash
-docker compose exec web python src/manage.py seed_tickets
-```
-
-Exécuter une commande Django :
-
-```bash
-docker compose exec web python src/manage.py <commande>
 ```
 
 ---
@@ -884,8 +769,8 @@ Workflow recommandé :
 9. Jenkins détecte la Pull Request et exécute automatiquement la CI.
 10. Vérifier le résultat de la CI.
 11. Effectuer la revue de code.
-12. Fusionner dans `main`.
-13. Mettre à jour la branche `main`.
+12. Fusionner la Pull Request dans `main`.
+13. Synchroniser la branche `main` locale avec `origin/main`.
 14. Supprimer les branches devenues inutiles.
 
 ## CI lors d'une Pull Request
@@ -903,31 +788,11 @@ La CI vérifie notamment :
 
 La Pull Request peut ensuite être revue et fusionnée lorsque les vérifications nécessaires sont satisfaisantes.
 
-Exemple :
-
-```bash
-git checkout main
-git pull
-git checkout -b feature/my-feature
-```
-
-Avant un commit :
-
-```bash
-docker compose exec web pytest
-```
-
-Puis :
-
-```powershell
-.venv\Scripts\pre-commit.exe run --all-files
-```
-
 ---
 
 # Convention de commits
 
-Le projet suit **Conventional Commits**.
+Le projet utilise la convention **Conventional Commits** pour structurer les messages de commit.
 
 | Type | Description |
 |------|-------------|
@@ -936,16 +801,24 @@ Le projet suit **Conventional Commits**.
 | `docs` | Documentation |
 | `refactor` | Refactorisation sans changement fonctionnel |
 | `test` | Ajout ou modification de tests |
+| `ci` | Modification de la configuration d'intégration continue |
 | `chore` | Maintenance |
 
 Exemples :
 
 ```text
 feat(users): create custom user model
+
 feat(tickets): implement ticket management domain
+
 feat(api): expose reference models API
+
 test(tickets): improve assignment coverage
+
 refactor(tickets): improve viewset structure
+
+ci: configure Jenkins pipeline
+
 docs: update README
 ```
 
@@ -1159,7 +1032,7 @@ Objectif : comprendre et mettre en place progressivement une chaîne d'industria
 
 Ce sprint ne se limite pas à écrire un fichier de pipeline. Il doit permettre de comprendre les concepts, les outils et le workflow complet allant du code jusqu'à une application vérifiée après déploiement.
 
-### ✅ US-501 — Comprendre CI/CD
+### 🟡 US-501 — Comprendre CI/CD
 
 - [x] Comprendre l'intégration continue
 - [ ] Comprendre la livraison continue
@@ -1168,9 +1041,9 @@ Ce sprint ne se limite pas à écrire un fichier de pipeline. Il doit permettre 
 - [ ] Comprendre les artefacts
 - [x] Comprendre les environnements
 - [x] Comprendre les secrets et credentials
-- [ ] Comprendre les déclencheurs de pipeline
+- [x] Comprendre les déclencheurs de pipeline
 
-### ✅ US-502 — Jenkins
+### 🟡 US-502 — Jenkins
 
 - [x] Comprendre l'architecture Jenkins
 - [ ] Comprendre controller et agent
@@ -1184,6 +1057,8 @@ Ce sprint ne se limite pas à écrire un fichier de pipeline. Il doit permettre 
 - [x] Configurer un Multibranch Pipeline
 - [x] Découvrir les branches Git avec Jenkins
 - [x] Découvrir les Pull Requests avec Jenkins
+- [x] Configurer l'intégration GitHub avec Jenkins
+- [x] Configurer le webhook GitHub
 
 ### ✅ US-503 — Pipeline CI HelpDesk API
 
@@ -1200,7 +1075,7 @@ Ce sprint ne se limite pas à écrire un fichier de pipeline. Il doit permettre 
 - [x] Nettoyage de l'environnement CI
 - [x] Comprendre l'intégration de la CI dans un workflow de Pull Request
 
-### US-504 — GitHub Actions
+### ⬜ US-504 — GitHub Actions
 
 - [ ] Comprendre GitHub Actions
 - [ ] Comprendre workflow, job, step et runner
@@ -1208,7 +1083,7 @@ Ce sprint ne se limite pas à écrire un fichier de pipeline. Il doit permettre 
 - [ ] Comprendre les limites liées aux quotas et à la facturation
 - [ ] Créer un exemple simple sans rendre le projet dépendant d'un abonnement payant
 
-### US-505 — Image Docker de production
+### ⬜ US-505 — Image Docker de production
 
 - [ ] Comprendre la différence entre image de développement et image de production
 - [ ] Créer un Dockerfile de production
@@ -1216,21 +1091,21 @@ Ce sprint ne se limite pas à écrire un fichier de pipeline. Il doit permettre 
 - [ ] Configurer un utilisateur non-root
 - [ ] Séparer la configuration de développement et de production
 
-### US-506 — Gunicorn
+### ⬜ US-506 — Gunicorn
 
 - [ ] Comprendre pourquoi `runserver` n'est pas utilisé en production
 - [ ] Installer et configurer Gunicorn
 - [ ] Lancer Django avec Gunicorn
 - [ ] Comprendre le rôle du serveur d'application
 
-### US-507 — Nginx
+### ⬜ US-507 — Nginx
 
 - [ ] Comprendre le rôle d'un reverse proxy
 - [ ] Configurer Nginx devant Gunicorn
 - [ ] Gérer les fichiers statiques
 - [ ] Comprendre le flux Internet → Nginx → Gunicorn → Django → PostgreSQL
 
-### US-508 — Configuration et secrets de production
+### ⬜ US-508 — Configuration et secrets de production
 
 - [ ] Séparer les environnements dev, test et prod
 - [ ] Gérer les variables d'environnement
@@ -1238,7 +1113,7 @@ Ce sprint ne se limite pas à écrire un fichier de pipeline. Il doit permettre 
 - [ ] Éviter l'exposition de secrets dans le dépôt
 - [ ] Vérifier la configuration Django pour la production
 
-### US-509 — Déploiement
+### ⬜ US-509 — Déploiement
 
 - [ ] Préparer un environnement de déploiement
 - [ ] Déployer l'application
@@ -1302,9 +1177,10 @@ Ce sprint ne se limite pas à écrire un fichier de pipeline. Il doit permettre 
 
 ---
 
-## Sprint 7 — PostgreSQL avancé
+## Sprint 7 — PostgreSQL et SQL avancé
 
 > PostgreSQL est déjà utilisé par l'application.
+>
 > Ce sprint correspond à l'approfondissement de PostgreSQL et SQL avancé et sera réalisé ultérieurement, après l'intégration GLPI.
 
 ### US-701 — Transactions et atomicité
@@ -1395,18 +1271,16 @@ Ce sprint ne se limite pas à écrire un fichier de pipeline. Il doit permettre 
 
 # État global
 
-```text
-Sprint 1 — Infrastructure                     ✅ Terminé
-Sprint 2 — Domaine métier                     ✅ Terminé
-Sprint 3 — API REST                           ✅ Terminé
-Sprint 4 — Qualité & tests                    ✅ Terminé
-
-Sprint 5 — CI/CD & Industrialisation          🟡 En cours
-
-Sprint 6 — Intégration GLPI                   ⚪ À venir
-Sprint 7 — PostgreSQL avancé & SQL procédural ⚪ À venir
-Sprint 8 — Kubernetes                         ⚪ À venir
-```
+| Sprint | État |
+|--------|------|
+| Sprint 1 — Infrastructure | ✅ Terminé |
+| Sprint 2 — Domaine métier | ✅ Terminé |
+| Sprint 3 — API REST | ✅ Terminé |
+| Sprint 4 — Qualité & tests | ✅ Terminé |
+| Sprint 5 — CI/CD & Industrialisation | 🟡 En cours |
+| Sprint 6 — Intégration GLPI | ⚪ À venir |
+| Sprint 7 — PostgreSQL et SQL avancé | ⚪ À venir |
+| Sprint 8 — Kubernetes | ⚪ À venir |
 
 Le projet évolue progressivement : chaque sprint ajoute une nouvelle compétence technique ou une nouvelle dimension d'industrialisation sans anticiper les étapes qui n'ont pas encore été étudiées.
 
@@ -1429,6 +1303,8 @@ Il permet de travailler progressivement :
 - tests automatisés ;
 - qualité et sécurité du code ;
 - Git et workflow collaboratif ;
-- puis, dans les étapes suivantes, PostgreSQL avancé, CI/CD, intégration GLPI et Kubernetes.
+- CI/CD et industrialisation.
+
+Les prochaines étapes du projet portent notamment sur l'intégration GLPI, l'approfondissement de PostgreSQL et SQL avancé, ainsi que Kubernetes.
 
 L'objectif final est de disposer d'une application Backend suffisamment structurée pour servir de support à l'apprentissage et à la préparation à un environnement professionnel.
